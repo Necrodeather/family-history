@@ -1,10 +1,17 @@
+from typing import TypeVar
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+TSettings = TypeVar("TSettings", bound=BaseSettings)
+
+
+def get_settings(cls: type[TSettings]) -> TSettings:
+    return cls()
 
 
 class DatabaseSettings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
-        env_prefix="postgresql_",
+        env_file="~/.env",
+        env_prefix="postgres_",
         extra="ignore",
     )
 
@@ -18,3 +25,6 @@ class DatabaseSettings(BaseSettings):
     @property
     def uri(self) -> str:
         return f"{self.driver}://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
+
+
+database_settings: DatabaseSettings = get_settings(DatabaseSettings)

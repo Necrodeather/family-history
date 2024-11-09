@@ -14,11 +14,10 @@ uuid_pk = Annotated[
     mapped_column(UUIDType, primary_key=True, default=uuid4()),
 ]
 
-decimal = Annotated[Decimal, Decimal(10, 2)]
+decimal = Annotated[Decimal, (10, 2)]
 str_64 = Annotated[str, 64]
 str_128 = Annotated[str, 128]
-str_255 = Annotated[str, 255]
-password = Annotated[str, PasswordType]
+password = Annotated[bytes, PasswordType]
 email = Annotated[str, EmailType]
 phone = Annotated[str, PhoneNumberType]
 date_sql = date
@@ -42,10 +41,9 @@ class Base(DeclarativeBase):
         type_annotation_map={
             str_64: String(64),
             str_128: String(128),
-            str_255: String(255),
             datetime_timezone: DateTime(timezone=True),
             date_sql: Date(),
-            password: PasswordType(),
+            password: PasswordType(schemes=["bcrypt"]),
             email: EmailType(),
             uuid_pk: UUIDType(),
             phone: PhoneNumberType(),
