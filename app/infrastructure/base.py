@@ -6,20 +6,24 @@ from decimal import Decimal
 
 from sqlalchemy import DateTime, MetaData, String, Date, DECIMAL
 from sqlalchemy.orm import DeclarativeBase, mapped_column, registry
-from sqlalchemy_utils import EmailType, PasswordType, UUIDType, PhoneNumberType
+from sqlalchemy_utils import EmailType, PasswordType, UUIDType
 
 
 uuid_pk = Annotated[
     UUID,
-    mapped_column(UUIDType, primary_key=True, default=uuid4()),
+    mapped_column(
+        UUIDType(binary=False),
+        primary_key=True,
+        default=uuid4,
+    ),
 ]
 
+uuid = Annotated[UUID, False]
 decimal = Annotated[Decimal, (10, 2)]
 str_64 = Annotated[str, 64]
 str_128 = Annotated[str, 128]
 password = Annotated[bytes, PasswordType]
-email = Annotated[str, EmailType]
-phone = Annotated[str, PhoneNumberType]
+email_sql = Annotated[str, EmailType]
 date_sql = date
 datetime_timezone = Annotated[datetime, True]
 
@@ -44,9 +48,7 @@ class Base(DeclarativeBase):
             datetime_timezone: DateTime(timezone=True),
             date_sql: Date(),
             password: PasswordType(schemes=["bcrypt"]),
-            email: EmailType(),
-            uuid_pk: UUIDType(),
-            phone: PhoneNumberType(),
+            email_sql: EmailType(),
             decimal: DECIMAL(10, 2),
         },
     )
