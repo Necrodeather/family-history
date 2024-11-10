@@ -21,10 +21,24 @@ class DatabaseSettings(BaseSettings):
     host: str = "localhost"
     port: int = 5432
     db: str
+    echo: bool = False
 
     @property
     def uri(self) -> str:
         return f"{self.driver}://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
 
 
+class AppSettings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file="~/.env",
+        env_prefix="app_",
+        extra="ignore",
+    )
+    host: str = "localhost"
+    port: int = 8000
+    debug_reload: bool = False
+    workers: int = 1
+
+
 database_settings: DatabaseSettings = get_settings(DatabaseSettings)
+app_settings: AppSettings = get_settings(AppSettings)
