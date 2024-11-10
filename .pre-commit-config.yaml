@@ -1,0 +1,23 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-json
+      - id: check-toml
+      - id: check-yaml
+      - id: check-merge-conflict
+      - id: debug-statements
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff
+        entry: ruff check .
+        args: [--config, pyproject.toml]
+        language: python
+        types: [python]
+      - id: mypy
+        name: mypy
+        entry: mypy
+        args: [--config-file, pyproject.toml]
+        language: python
+        types: [python]
