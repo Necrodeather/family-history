@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.infrastructure.base import email_sql, password, str_64
+from app.infrastructure.database.base import email_sql, password, str_64
 
 from .mixins import BaseMixin, CreatedAtMixin
 

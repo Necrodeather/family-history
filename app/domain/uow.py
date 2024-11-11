@@ -1,8 +1,21 @@
 from abc import ABC, abstractmethod
 from typing import Any, AsyncGenerator, Self
 
+from app.domain.const import CreateSchemaType, ModelType, UpdateSchemaType
+from app.domain.repository.crud import CRUDRepository
+
 
 class UnitOfWork(ABC):
+    def __init__(
+        self,
+        repository: CRUDRepository[
+            ModelType,
+            CreateSchemaType,
+            UpdateSchemaType,
+        ],
+    ) -> None:
+        self.repository = repository
+
     @abstractmethod
     async def __aenter__(self) -> Self:
         raise NotImplementedError()

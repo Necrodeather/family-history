@@ -1,6 +1,6 @@
-from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import Mapped, mapped_column
 
-from app.infrastructure.base import Base, datetime_timezone, uuid_pk
+from app.infrastructure.database.base import Base, datetime_timezone, uuid_pk
 
 
 class BaseMixin(Base):
@@ -12,10 +12,14 @@ class BaseMixin(Base):
 class CreatedAtMixin(Base):
     __abstract__ = True
 
-    created_at: Mapped[datetime_timezone]
+    created_at: Mapped[datetime_timezone] = mapped_column(
+        default=datetime_timezone.now
+    )
 
 
 class UpdatedAtMixin(Base):
     __abstract__ = True
 
-    updated_at: Mapped[datetime_timezone]
+    updated_at: Mapped[datetime_timezone] = mapped_column(
+        default=datetime_timezone.now
+    )

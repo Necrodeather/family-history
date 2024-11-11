@@ -1,14 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import Any, Generic, Sequence, TypeVar
+from typing import Any, Generic, Sequence
 
-ModelType = TypeVar('ModelType')
-CreateSchemaType = TypeVar('CreateSchemaType')
-UpdateSchemaType = TypeVar('UpdateSchemaType')
+from app.domain.const import CreateSchemaType, ModelType, UpdateSchemaType
 
 
 class CRUDRepository(
     ABC,
-    Generic[
+    Generic[  # type: ignore[misc]
         ModelType,
         CreateSchemaType,
         UpdateSchemaType,
@@ -40,5 +38,5 @@ class CRUDRepository(
         raise NotImplementedError
 
     @abstractmethod
-    async def remove_by_id(self, entity_id: Any) -> None:
+    async def delete_by_id(self, entity_id: Any) -> None:
         raise NotImplementedError

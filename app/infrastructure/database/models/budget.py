@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.infrastructure.base import date_sql, decimal, str_128, uuid
+from app.infrastructure.database.base import date_sql, decimal, str_128, uuid
 
 from .mixins import BaseMixin, CreatedAtMixin, UpdatedAtMixin
 
@@ -28,29 +28,31 @@ class IncomesCategory(Category):
     incomes: Mapped[list['Income']] = relationship(back_populates='category')
 
 
-class Expenses(BaseMixin, CreatedAtMixin, UpdatedAtMixin):
-    __tablename__ = 'expenses'
+class Budget(BaseMixin, CreatedAtMixin, UpdatedAtMixin):
+    __abstract__ = True
 
     name: Mapped[str_128]
+    amount: Mapped[decimal]
+    date: Mapped[date_sql]
+
+
+class Expenses(Budget):
+    __tablename__ = 'expenses'
+
     category_id: Mapped[uuid] = mapped_column(
         ForeignKey('expenses_categories.id'),
     )
-    amount: Mapped[decimal]
-    date: Mapped[date_sql]
     category: Mapped['ExpensesCategory'] = relationship(
         back_populates='expenses',
     )
 
 
-class Income(BaseMixin, CreatedAtMixin, UpdatedAtMixin):
+class Income(Budget):
     __tablename__ = 'incomes'
 
-    name: Mapped[str_128]
-    amount: Mapped[decimal]
     category_id: Mapped[uuid] = mapped_column(
         ForeignKey('incomes_categories.id'),
     )
-    date: Mapped[date_sql]
     category: Mapped['IncomesCategory'] = relationship(
         back_populates='incomes',
     )
