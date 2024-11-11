@@ -1,7 +1,6 @@
-from datetime import datetime
 from sqlalchemy.orm import Mapped
 
-from app.infrastructure.base import Base, uuid_pk
+from app.infrastructure.base import Base, uuid_pk, datetime_timezone
 
 class BaseMixin(Base):
     __abstract__ = True
@@ -12,10 +11,10 @@ class BaseMixin(Base):
 class CreatedAtMixin(Base):
     __abstract__ = True
 
-    created_at: Mapped[datetime]
+    created_at: Mapped[datetime_timezone]
 
 
 class UpdatedAtMixin(Base):
     __abstract__ = True
 
-    updated_at: Mapped[datetime]
+    updated_at: Mapped[datetime_timezone]

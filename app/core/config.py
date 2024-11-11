@@ -1,4 +1,5 @@
 from typing import TypeVar
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 TSettings = TypeVar("TSettings", bound=BaseSettings)
