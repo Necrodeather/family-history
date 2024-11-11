@@ -1,15 +1,25 @@
-from typing import Any, AsyncGenerator, Self, Type
+from typing import Any, AsyncGenerator, Self
 
 from sqlalchemy.ext.asyncio import AsyncSession, AsyncSessionTransaction
 
 from app.core.config import database_settings
+from app.domain.const import CreateSchemaType, ModelType, UpdateSchemaType
 from app.domain.uow import UnitOfWork
-from app.infrastructure.engine import SqlAlchemyEngine
-from app.infrastructure.repository.base import SQLAlchemyCRUDRepository
+from app.infrastructure.database.engine import SqlAlchemyEngine
+from app.infrastructure.database.repository.crud.base import (
+    SQLAlchemyCRUDRepository,
+)
 
 
 class SqlAlchemyUnitOfWork(UnitOfWork):
-    def __init__(self, repository: Type[SQLAlchemyCRUDRepository]) -> None:
+    def __init__(
+        self,
+        repository: SQLAlchemyCRUDRepository[
+            ModelType,
+            CreateSchemaType,
+            UpdateSchemaType,
+        ],
+    ) -> None:
         self.engine = SqlAlchemyEngine(
             uri=database_settings.uri,
             echo=database_settings.echo,
@@ -18,7 +28,7 @@ class SqlAlchemyUnitOfWork(UnitOfWork):
         self.session: AsyncSession
 
     async def __aenter__(self) -> Self:
-        self.session = self.engine.create_session_maker()
+        self.session = self.engine.create_session_maker()()
         self.repository = self.repository(self.session)
         return self
 
