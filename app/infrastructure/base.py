@@ -1,13 +1,11 @@
-from uuid import uuid4, UUID
-
-from datetime import datetime, date
-from typing import Annotated
+from datetime import date, datetime
 from decimal import Decimal
+from typing import Annotated
+from uuid import UUID, uuid4
 
-from sqlalchemy import DateTime, MetaData, String, Date, DECIMAL
+from sqlalchemy import DECIMAL, Date, DateTime, MetaData, String
 from sqlalchemy.orm import DeclarativeBase, mapped_column, registry
 from sqlalchemy_utils import EmailType, PasswordType, UUIDType
-
 
 uuid_pk = Annotated[
     UUID,

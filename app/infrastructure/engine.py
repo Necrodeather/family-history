@@ -1,11 +1,11 @@
 from sqlalchemy.ext.asyncio import (
-    create_async_engine,
-    async_sessionmaker,
     AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
 )
 
 
-class SqlalchemyEngine:
+class SqlAlchemyEngine:
     def __init__(self, uri: str, echo: bool = False) -> None:
         self._engine = create_async_engine(url=uri, echo=echo)
 
