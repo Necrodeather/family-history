@@ -17,7 +17,11 @@ AlchemyModelType = TypeVar('AlchemyModelType', bound=Base)
 
 
 class SQLAlchemyCRUDRepository(
-    CRUDRepository,
+    CRUDRepository[
+        ModelType,
+        CreateSchemaType,
+        UpdateSchemaType,
+    ],
 ):
     def __init__(self, model: type[AlchemyModelType]) -> None:
         self._model = model

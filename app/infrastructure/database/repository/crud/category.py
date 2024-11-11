@@ -9,7 +9,7 @@ from app.infrastructure.database.repository.crud.base import (
 
 
 class CRUDExpensesCategory(
-    SQLAlchemyCRUDRepository[
+    SQLAlchemyCRUDRepository[  # type: ignore[type-arg]
         ExpensesCategory,
         CategoryCreateUpdateForm,
         CategoryRead,
@@ -19,7 +19,7 @@ class CRUDExpensesCategory(
 
 
 class CRUDIncomesCategory(
-    SQLAlchemyCRUDRepository[
+    SQLAlchemyCRUDRepository[  # type: ignore[type-arg]
         IncomesCategory,
         CategoryCreateUpdateForm,
         CategoryRead,
@@ -29,4 +29,4 @@ class CRUDIncomesCategory(
 
 
 expenses_category_crud = CRUDExpensesCategory(ExpensesCategory)
-incomes_category_crud = CRUDIncomesCategory(IncomesCategory)
+income_category_crud = CRUDIncomesCategory(IncomesCategory)

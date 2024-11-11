@@ -5,7 +5,7 @@ from fastapi import APIRouter
 from app.domain.entities.category import CategoryCreateUpdateForm, CategoryRead
 from app.service.category import expenses_category_service
 
-expenses_category_router = APIRouter(prefix='/category')
+expenses_category_router = APIRouter(prefix='/expenses_category')
 
 
 @expenses_category_router.get('/')

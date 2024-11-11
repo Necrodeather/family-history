@@ -1,7 +1,7 @@
 from app.domain.entities.category import CategoryCreateUpdateForm, CategoryRead
 from app.infrastructure.database.repository.crud.category import (
     expenses_category_crud,
-    incomes_category_crud,
+    income_category_crud,
 )
 from app.infrastructure.database.uow import SqlAlchemyUnitOfWork
 from app.service.base import BaseService
@@ -20,6 +20,6 @@ class CategoryService(
 expenses_category_service = CategoryService(
     SqlAlchemyUnitOfWork(expenses_category_crud), CategoryRead
 )
-incomes_category_service = CategoryService(
-    SqlAlchemyUnitOfWork(incomes_category_crud), CategoryRead
+income_category_service = CategoryService(
+    SqlAlchemyUnitOfWork(income_category_crud), CategoryRead
 )
