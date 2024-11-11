@@ -2,7 +2,7 @@ from typing import TypeVar
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-TSettings = TypeVar("TSettings", bound=BaseSettings)
+TSettings = TypeVar('TSettings', bound=BaseSettings)
 
 
 def get_settings(cls: type[TSettings]) -> TSettings:
@@ -11,31 +11,31 @@ def get_settings(cls: type[TSettings]) -> TSettings:
 
 class DatabaseSettings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file="~/.env",
-        env_prefix="postgres_",
-        extra="ignore",
+        env_file='~/.env',
+        env_prefix='postgres_',
+        extra='ignore',
     )
 
-    driver: str = "postgresql+asyncpg"
+    driver: str = 'postgresql+asyncpg'
     user: str
     password: str
-    host: str = "localhost"
+    host: str = 'localhost'
     port: int = 5432
     db: str
     echo: bool = False
 
     @property
     def uri(self) -> str:
-        return f"{self.driver}://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
+        return f'{self.driver}://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}'
 
 
 class AppSettings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file="~/.env",
-        env_prefix="app_",
-        extra="ignore",
+        env_file='~/.env',
+        env_prefix='app_',
+        extra='ignore',
     )
-    host: str = "localhost"
+    host: str = 'localhost'
     port: int = 8000
     debug_reload: bool = False
     workers: int = 1

@@ -1,4 +1,3 @@
 from fastapi import APIRouter
 
-
-budget_router = APIRouter(prefix="/budget")
+budget_router = APIRouter(prefix='/budget')

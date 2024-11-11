@@ -27,11 +27,11 @@ datetime_timezone = Annotated[datetime, True]
 
 meta = MetaData(
     naming_convention={
-        "ix": "ix_%(column_0_label)s",
-        "uq": "uq_%(table_name)s_%(column_0_name)s",
-        "ck": "ck_%(table_name)s_%(constraint_name)s",
-        "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
-        "pk": "pk_%(table_name)s",
+        'ix': 'ix_%(column_0_label)s',
+        'uq': 'uq_%(table_name)s_%(column_0_name)s',
+        'ck': 'ck_%(table_name)s_%(constraint_name)s',
+        'fk': 'fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s',
+        'pk': 'pk_%(table_name)s',
     },
 )
 
@@ -45,7 +45,7 @@ class Base(DeclarativeBase):
             str_128: String(128),
             datetime_timezone: DateTime(timezone=True),
             date_sql: Date(),
-            password: PasswordType(schemes=["bcrypt"]),
+            password: PasswordType(schemes=['bcrypt']),
             email_sql: EmailType(),
             decimal: DECIMAL(10, 2),
         },

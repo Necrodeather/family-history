@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Mapped
 
-from app.infrastructure.base import Base, uuid_pk, datetime_timezone
+from app.infrastructure.base import Base, datetime_timezone, uuid_pk
+
 
 class BaseMixin(Base):
     __abstract__ = True

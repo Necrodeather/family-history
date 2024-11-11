@@ -73,11 +73,13 @@ fix = true
 target-version = "py312"
 
 [tool.ruff.lint]
-select = ["COM", "T100", "E", "F", "W", "ERA", "N"]
-dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
-ignore = ["F821"]
+select = ["COM", "T100", "E", 'F', "W", "ERA", "N", "I"]
+ignore = ["F821", "COM812"]
 fixable = ["ALL"]
-unfixable = []
+
+[tool.ruff.format]
+quote-style = "single"
+docstring-code-format = true
 
 [tool.ruff.lint.isort]
 case-sensitive = true
