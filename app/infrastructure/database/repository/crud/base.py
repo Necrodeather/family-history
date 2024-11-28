@@ -3,13 +3,13 @@ from typing import Any, Self, Sequence, TypeVar
 from sqlalchemy import delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.domain.const import (
+from app.domain.repository.crud import (
+    CRUDRepository,
+)
+from app.domain.types import (
     CreateSchemaType,
     ModelType,
     UpdateSchemaType,
-)
-from app.domain.repository.crud import (
-    CRUDRepository,
 )
 from app.infrastructure.database.base import Base
 

@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import Any, Generic, Sequence
 
-from app.domain.const import CreateSchemaType, ModelType, UpdateSchemaType
+from app.domain.types import CreateSchemaType, ModelType, UpdateSchemaType
 
 
 class CRUDRepository(
     ABC,
-    Generic[  # type: ignore[misc]
+    Generic[
         ModelType,
         CreateSchemaType,
         UpdateSchemaType,

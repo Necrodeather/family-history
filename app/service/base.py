@@ -1,16 +1,16 @@
 from typing import Generic, Type
 from uuid import UUID
 
-from app.domain.const import (
+from app.domain.entities.base import BaseEntity
+from app.domain.types import (
     CreateSchemaType,
     ReadSchemaType,
     UpdateSchemaType,
 )
-from app.domain.entities.base import BaseEntity
 from app.domain.uow import UnitOfWork
 
 
-class BaseService(Generic[CreateSchemaType, UpdateSchemaType, ReadSchemaType]):  # type: ignore[misc]
+class BaseService(Generic[CreateSchemaType, UpdateSchemaType, ReadSchemaType]):
     def __init__(
         self,
         uow: UnitOfWork,

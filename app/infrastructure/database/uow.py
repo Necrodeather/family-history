@@ -3,7 +3,7 @@ from typing import Any, AsyncGenerator, Self
 from sqlalchemy.ext.asyncio import AsyncSession, AsyncSessionTransaction
 
 from app.core.config import database_settings
-from app.domain.const import CreateSchemaType, ModelType, UpdateSchemaType
+from app.domain.types import CreateSchemaType, ModelType, UpdateSchemaType
 from app.domain.uow import UnitOfWork
 from app.infrastructure.database.engine import SqlAlchemyEngine
 from app.infrastructure.database.repository.crud.base import (
@@ -24,19 +24,20 @@ class SqlAlchemyUnitOfWork(UnitOfWork):
             uri=database_settings.uri,
             echo=database_settings.echo,
         )
-        self.repository = repository
+        self.repository_cls = repository
         self.session: AsyncSession
+        self.repository: SQLAlchemyCRUDRepository  # type: ignore[type-arg]
 
     async def __aenter__(self) -> Self:
         self.session = self.engine.create_session_maker()()
-        self.repository = self.repository(self.session)
+        self.repository = self.repository_cls(self.session)
         return self
 
     async def __aexit__(self, *args: list[Any]) -> None:
         await self.commit()
         await self.session.close()
 
-    async def begin(
+    async def begin(  # type: ignore[override]
         self,
     ) -> AsyncGenerator[AsyncSessionTransaction, None]:
         async with self.session.begin():

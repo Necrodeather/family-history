@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Any, AsyncGenerator, Self
 
-from app.domain.const import CreateSchemaType, ModelType, UpdateSchemaType
 from app.domain.repository.crud import CRUDRepository
+from app.domain.types import CreateSchemaType, ModelType, UpdateSchemaType
 
 
 class UnitOfWork(ABC):
