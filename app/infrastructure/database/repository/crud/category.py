@@ -1,4 +1,4 @@
-from app.domain.entities.category import CategoryCreateUpdateForm, CategoryRead
+from app.domain.entities.category import CategoryCreateUpdateForm
 from app.infrastructure.database.models.budget import (
     ExpensesCategory,
     IncomesCategory,
@@ -12,7 +12,7 @@ class CRUDExpensesCategory(
     SQLAlchemyCRUDRepository[
         ExpensesCategory,
         CategoryCreateUpdateForm,
-        CategoryRead,
+        CategoryCreateUpdateForm,
     ]
 ):
     pass
@@ -22,7 +22,7 @@ class CRUDIncomesCategory(
     SQLAlchemyCRUDRepository[
         IncomesCategory,
         CategoryCreateUpdateForm,
-        CategoryRead,
+        CategoryCreateUpdateForm,
     ]
 ):
     pass

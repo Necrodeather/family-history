@@ -6,8 +6,12 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 from app.core.config import database_settings
-from app.infrastructure.base import Base
-from app.infrastructure.models import budget, mixins, user  # noqa: F401
+from app.infrastructure.database.base import Base
+from app.infrastructure.database.models import (  # noqa: F401
+    budget,
+    mixins,
+    user,
+)
 
 config = context.config
 

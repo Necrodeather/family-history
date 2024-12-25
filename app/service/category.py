@@ -4,11 +4,11 @@ from app.infrastructure.database.repository.crud.category import (
     income_category_crud,
 )
 from app.infrastructure.database.uow import SqlAlchemyUnitOfWork
-from app.service.base import BaseService
+from app.service.base import AppCRUDService
 
 
 class CategoryService(
-    BaseService[
+    AppCRUDService[
         CategoryCreateUpdateForm,
         CategoryCreateUpdateForm,
         CategoryRead,

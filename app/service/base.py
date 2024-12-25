@@ -1,32 +1,31 @@
-from typing import Generic, Type
 from uuid import UUID
 
-from app.domain.entities.base import BaseEntity
+from app.domain.exceptions import NotFoundError
+from app.domain.service.crud import CRUDService
 from app.domain.types import (
     CreateSchemaType,
     ReadSchemaType,
     UpdateSchemaType,
 )
-from app.domain.uow import UnitOfWork
 
 
-class BaseService(Generic[CreateSchemaType, UpdateSchemaType, ReadSchemaType]):
-    def __init__(
-        self,
-        uow: UnitOfWork,
-        read_entity: Type[BaseEntity],
-    ) -> None:
-        self._read_entity = read_entity
-        self._uow = uow
-
+class AppCRUDService(
+    CRUDService[
+        CreateSchemaType,
+        UpdateSchemaType,
+        ReadSchemaType,
+    ]
+):
     async def get_all(self) -> list[ReadSchemaType]:
         async with self._uow as uow:
             result = await uow.repository.get_all()
         return self._read_entity.from_list(result)
 
-    async def get_by_id(self, entity_id: UUID) -> ReadSchemaType:
+    async def get_by_id(self, entity_id: UUID | str) -> ReadSchemaType:
         async with self._uow as uow:
             result = await uow.repository.get_by_id(entity_id)
+        if not result:
+            raise NotFoundError()
         return self._read_entity.model_validate(result)
 
     async def create(self, entity: CreateSchemaType) -> ReadSchemaType:
@@ -41,6 +40,8 @@ class BaseService(Generic[CreateSchemaType, UpdateSchemaType, ReadSchemaType]):
     ) -> ReadSchemaType:
         async with self._uow as uow:
             result = await uow.repository.update_by_id(entity_id, entity)
+        if not result:
+            raise NotFoundError()
         return self._read_entity.model_validate(result)
 
     async def delete_by_id(self, entity_id: UUID) -> None:

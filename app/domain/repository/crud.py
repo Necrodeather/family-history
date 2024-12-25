@@ -1,42 +1,39 @@
 from abc import ABC, abstractmethod
-from typing import Any, Generic, Sequence
+from typing import Any, Sequence
 
-from app.domain.types import CreateSchemaType, ModelType, UpdateSchemaType
+from pydantic import BaseModel
 
 
-class CRUDRepository(
-    ABC,
-    Generic[
-        ModelType,
-        CreateSchemaType,
-        UpdateSchemaType,
-    ],
-):
+class CRUDRepository[
+    ModelT: BaseModel,
+    CreateSchemaT: BaseModel,
+    UpdateSchemaT: BaseModel,
+](ABC):
     @abstractmethod
     async def get_all(
         self,
-    ) -> Sequence[ModelType]:
-        raise NotImplementedError
+    ) -> Sequence[ModelT]:
+        raise NotImplementedError()
 
     @abstractmethod
     async def get_by_id(
         self,
         entity_id: Any,
-    ) -> ModelType | None:
-        raise NotImplementedError
+    ) -> ModelT | None:
+        raise NotImplementedError()
 
     @abstractmethod
-    async def create(self, object: CreateSchemaType) -> ModelType:
-        raise NotImplementedError
+    async def create(self, object: CreateSchemaT) -> ModelT:
+        raise NotImplementedError()
 
     @abstractmethod
     async def update_by_id(
         self,
         obj_id: Any,
-        obj_data: UpdateSchemaType,
-    ) -> ModelType:
-        raise NotImplementedError
+        obj_data: UpdateSchemaT,
+    ) -> ModelT:
+        raise NotImplementedError()
 
     @abstractmethod
     async def delete_by_id(self, entity_id: Any) -> None:
-        raise NotImplementedError
+        raise NotImplementedError()

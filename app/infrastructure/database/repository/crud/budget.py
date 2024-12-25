@@ -1,4 +1,4 @@
-from app.domain.entities.budget import BudgetCreateUpdateForm, BudgetRead
+from app.domain.entities.budget import BudgetCreateForm, BudgetUpdateForm
 from app.infrastructure.database.models.budget import Expenses, Income
 from app.infrastructure.database.repository.crud.base import (
     SQLAlchemyCRUDRepository,
@@ -6,13 +6,13 @@ from app.infrastructure.database.repository.crud.base import (
 
 
 class CRUDExpenses(
-    SQLAlchemyCRUDRepository[Expenses, BudgetCreateUpdateForm, BudgetRead]
+    SQLAlchemyCRUDRepository[Expenses, BudgetCreateForm, BudgetUpdateForm]
 ):
     pass
 
 
 class CRUDIncome(
-    SQLAlchemyCRUDRepository[Income, BudgetCreateUpdateForm, BudgetRead]
+    SQLAlchemyCRUDRepository[Income, BudgetCreateForm, BudgetUpdateForm]
 ):
     pass
 

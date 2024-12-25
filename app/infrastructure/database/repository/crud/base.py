@@ -62,7 +62,7 @@ class SQLAlchemyCRUDRepository(
         stmt = (
             update(self._model)
             .where(self._model.id == obj_id)
-            .values(obj_data)
+            .values(obj_data.model_dump(exclude_none=True))
             .returning(self._model)
         )
         result = await self.session.execute(stmt)

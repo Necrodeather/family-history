@@ -39,8 +39,12 @@ class AppSettings(BaseSettings):
     )
     host: str = 'localhost'
     port: int = 8000
+    secret_key: str
     debug_reload: bool = False
     workers: int = 1
+    refresh_token_expire_minutes: int = 15
+    access_token_expire_minutes: int = 5
+    algorithm: str = 'HS256'
 
 
 database_settings: DatabaseSettings = get_settings(DatabaseSettings)
