@@ -1,4 +1,3 @@
-from mailbox import Message
 from typing import Annotated
 from uuid import UUID
 
@@ -7,6 +6,7 @@ from fastapi import APIRouter, Depends
 from app.domain.entities.auth import JWTUser
 from app.domain.entities.user import UserRead
 from app.public.api.permission import decode_token
+from app.public.api.schemas import Message
 from app.service.user import user_service
 
 user_router = APIRouter(prefix='/user')
