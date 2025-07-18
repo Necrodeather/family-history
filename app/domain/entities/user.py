@@ -22,3 +22,7 @@ class UserRead(BaseEntity):
     first_name: str
     last_name: str
     email: EmailStr
+
+
+class UserQuery(BaseModel):
+    name__like: str | None

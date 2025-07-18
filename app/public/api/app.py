@@ -4,8 +4,10 @@ from fastapi.responses import JSONResponse
 
 from app.domain.exceptions import (
     CredentialsError,
+    EntityAlreadyError,
     IncorrectLoginError,
     NotFoundError,
+    UserAlreadyRegisteredError,
 )
 from app.public.api.v1 import api_router
 from app.utils import read_pyproject_toml
@@ -21,11 +23,12 @@ def create_app() -> FastAPI:
         license_info={'name': project_info['project']['license']},
     )
     app.include_router(api_router)
+
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=['*'],
         allow_credentials=True,
         allow_methods=['*'],
+        allow_origins=['*'],
         allow_headers=['*'],
     )
 
@@ -65,5 +68,27 @@ async def not_found_handler(
 ) -> JSONResponse:
     return JSONResponse(
         status_code=404,
+        content={'message': exc.message},
+    )
+
+
+@app.exception_handler(UserAlreadyRegisteredError)
+async def user_already_registered_handler(
+    request: Request,
+    exc: UserAlreadyRegisteredError,
+) -> JSONResponse:
+    return JSONResponse(
+        status_code=409,
+        content={'message': exc.message},
+    )
+
+
+@app.exception_handler(EntityAlreadyError)
+async def entity_already_handler(
+    request: Request,
+    exc: EntityAlreadyError,
+) -> JSONResponse:
+    return JSONResponse(
+        status_code=409,
         content={'message': exc.message},
     )

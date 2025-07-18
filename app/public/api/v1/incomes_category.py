@@ -6,23 +6,24 @@ from fastapi import APIRouter, Depends, status
 from app.domain.entities.auth import JWTUser
 from app.domain.entities.category import CategoryCreateUpdateForm, CategoryRead
 from app.public.api.permission import decode_token
-from app.public.api.schemas import Message
+from app.public.api.schemas import CategoryQueryApi, ErrorMessage
 from app.service.category import income_category_service
 
 incomes_category_router = APIRouter(prefix='/incomes_category')
 
 
 @incomes_category_router.get('/')
-async def get_all(
+async def get(
+    query: Annotated[CategoryQueryApi, Depends()],
     _: Annotated[JWTUser, Depends(decode_token)],
 ) -> list[CategoryRead]:
-    return await income_category_service.get_all()
+    return await income_category_service.get_multi(query)
 
 
 @incomes_category_router.get(
     '/{category_id}',
     responses={
-        404: {'model': Message},
+        404: {'model': ErrorMessage},
     },
 )
 async def get_by_id(
@@ -32,7 +33,13 @@ async def get_by_id(
     return await income_category_service.get_by_id(category_id)
 
 
-@incomes_category_router.post('/', status_code=status.HTTP_201_CREATED)
+@incomes_category_router.post(
+    '/',
+    status_code=status.HTTP_201_CREATED,
+    responses={
+        409: {'model': ErrorMessage},
+    },
+)
 async def create(
     category: CategoryCreateUpdateForm,
     _: Annotated[JWTUser, Depends(decode_token)],
@@ -43,7 +50,7 @@ async def create(
 @incomes_category_router.put(
     '/{category_id}',
     responses={
-        404: {'model': Message},
+        404: {'model': ErrorMessage},
     },
 )
 async def update(

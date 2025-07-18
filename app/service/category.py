@@ -18,8 +18,10 @@ class CategoryService(
 
 
 expenses_category_service = CategoryService(
-    SqlAlchemyUnitOfWork(expenses_category_crud), CategoryRead
+    SqlAlchemyUnitOfWork(expenses_category_crud),
+    CategoryRead,
 )
 income_category_service = CategoryService(
-    SqlAlchemyUnitOfWork(income_category_crud), CategoryRead
+    SqlAlchemyUnitOfWork(income_category_crud),
+    CategoryRead,
 )

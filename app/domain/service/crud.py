@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Type
+from typing import Any, Type
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -22,7 +22,7 @@ class CRUDService[
         self._uow = uow
 
     @abstractmethod
-    async def get_all(self) -> list[ReadSchemaT]:
+    async def get_multi(self, query: Any) -> list[ReadSchemaT]:
         raise NotImplementedError()
 
     @abstractmethod

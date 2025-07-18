@@ -13,3 +13,7 @@ class CategoryRead(CategoryCreateUpdateForm, BaseEntity):
     id: UUID4
     created_at: datetime
     updated_at: datetime
+
+
+class CategoryQuery(BaseModel):
+    name__like: str | None = None

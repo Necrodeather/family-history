@@ -12,6 +12,7 @@ class Category(BaseMixin, CreatedAtMixin, UpdatedAtMixin):
     __abstract__ = True
 
     name: Mapped[str_128] = mapped_column(unique=True)
+    user_id: Mapped[uuid] = mapped_column(ForeignKey("users.id"))
 
 
 class ExpensesCategory(Category):
@@ -34,7 +35,7 @@ class Budget(BaseMixin, CreatedAtMixin, UpdatedAtMixin):
     name: Mapped[str_128]
     amount: Mapped[decimal]
     date: Mapped[date_sql]
-
+    user_id: Mapped[uuid] = mapped_column(ForeignKey("users.id"))
 
 class Expenses(Budget):
     __tablename__ = 'expenses'

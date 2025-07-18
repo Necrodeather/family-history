@@ -3,6 +3,10 @@ from app.infrastructure.database.models.budget import Expenses, Income
 from app.infrastructure.database.repository.crud.base import (
     SQLAlchemyCRUDRepository,
 )
+from app.infrastructure.database.repository.filter.budget import (
+    expenses_filter,
+    income_filter,
+)
 
 
 class CRUDExpenses(
@@ -17,5 +21,5 @@ class CRUDIncome(
     pass
 
 
-expenses_crud = CRUDExpenses(Expenses)
-income_crud = CRUDIncome(Expenses)
+expenses_crud = CRUDExpenses(Expenses, expenses_filter)
+income_crud = CRUDIncome(Expenses, income_filter)

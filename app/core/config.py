@@ -1,4 +1,3 @@
-from functools import lru_cache
 from typing import TypeVar
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -6,7 +5,6 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 TSettings = TypeVar('TSettings', bound=BaseSettings)
 
 
-@lru_cache()
 def get_settings(cls: type[TSettings]) -> TSettings:
     return cls()
 

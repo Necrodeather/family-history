@@ -21,5 +21,6 @@ class UpdatedAtMixin(Base):
     __abstract__ = True
 
     updated_at: Mapped[datetime_timezone] = mapped_column(
-        default=datetime_timezone.now
+        default=datetime_timezone.now,
+        onupdate=datetime_timezone.now,
     )

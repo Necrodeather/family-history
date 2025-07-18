@@ -14,3 +14,15 @@ class NotFoundError(Exception):
     def __init__(self) -> None:
         self.message = 'Not Found'
         super().__init__(self.message)
+
+
+class UserAlreadyRegisteredError(Exception):
+    def __init__(self) -> None:
+        self.message = 'A user with this email already exists'
+        super().__init__(self.message)
+
+
+class EntityAlreadyError(Exception):
+    def __init__(self) -> None:
+        self.message = 'A entity already exists'
+        super().__init__(self.message)

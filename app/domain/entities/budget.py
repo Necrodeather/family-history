@@ -26,3 +26,9 @@ class BudgetRead(BudgetCreateForm, BaseEntity):
     id: UUID4
     created_at: datetime
     updated_at: datetime
+
+
+class BudgetQuery(BaseModel):
+    name__like: str | None
+    category_id: int | None
+    user_id: int | None

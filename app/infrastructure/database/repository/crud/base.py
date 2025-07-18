@@ -1,4 +1,4 @@
-from typing import Any, Self, Sequence, TypeVar
+from typing import Any, Self, Sequence, Type, TypeVar
 
 from sqlalchemy import delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -9,9 +9,11 @@ from app.domain.repository.crud import (
 from app.domain.types import (
     CreateSchemaType,
     ModelType,
+    QuerySchemaType,
     UpdateSchemaType,
 )
 from app.infrastructure.database.base import Base
+from app.infrastructure.database.repository.filter.base import SqlAlchemyFilter
 
 AlchemyModelType = TypeVar('AlchemyModelType', bound=Base)
 
@@ -23,17 +25,40 @@ class SQLAlchemyCRUDRepository(
         UpdateSchemaType,
     ],
 ):
-    def __init__(self, model: type[AlchemyModelType]) -> None:
+    def __init__(
+        self,
+        model: Type[AlchemyModelType],
+        filter: SqlAlchemyFilter,
+    ) -> None:
         self._model = model
+        self.filter = filter
 
     def __call__(self, session: AsyncSession) -> Self:
         self.session = session
         return self
 
-    async def get_all(
+    async def get_multi(
         self,
+        query: QuerySchemaType,
     ) -> Sequence[ModelType]:
         stmt = select(self._model)
+        if self.filter.select is not None:
+            stmt = self.filter.select
+
+        where_expression = self.filter.where(query)
+
+        if where_expression is not None:
+            stmt = stmt.where(where_expression)
+
+        if self.filter.order_by is not None:
+            stmt = stmt.order_by(self.filter.order_by)
+
+        if self.filter.offset is not None:
+            stmt = stmt.offset(self.filter.offset)
+
+        if self.filter.limit is not None:
+            stmt = stmt.limit(self.filter.limit)
+
         result = await self.session.execute(stmt)
         return result.scalars().all()
 
