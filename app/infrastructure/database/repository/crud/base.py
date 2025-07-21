@@ -42,6 +42,7 @@ class SQLAlchemyCRUDRepository(
         query: QuerySchemaType,
     ) -> Sequence[ModelType]:
         stmt = select(self._model)
+
         if self.filter.select is not None:
             stmt = self.filter.select
 
@@ -50,9 +51,11 @@ class SQLAlchemyCRUDRepository(
         if where_expression is not None:
             stmt = stmt.where(where_expression)
 
+        self.filter.order = query.order
         if self.filter.order_by is not None:
             stmt = stmt.order_by(self.filter.order_by)
 
+        self.filter.page = query.page
         if self.filter.offset is not None:
             stmt = stmt.offset(self.filter.offset)
 

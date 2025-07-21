@@ -22,4 +22,6 @@ class CategoryRead(CategoryCreateForm, CategoryUpdateForm, BaseEntity):
 
 
 class CategoryQuery(BaseModel):
-    name__like: str | None = None
+    name__like: str | None
+    page: int | None
+    order: str | None

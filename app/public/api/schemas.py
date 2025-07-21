@@ -12,13 +12,19 @@ class ErrorMessage(BaseModel):
 
 class CategoryQueryApi(CategoryQuery):
     name__like: str | None = Query(default=None)
+    page: int | None = Query(default=None)
+    order: str | None = Query(default=None)
 
 
 class BudgetQueryApi(BudgetQuery):
     name__like: str | None = Query(default=None)
     category_id: int | None = Query(default=None)
     user_id: int | None = Query(default=None)
+    page: int | None = Query(default=None)
+    order: str | None = Query(default=None)
 
 
 class UserQueryApi(UserQuery):
     name__like: str | None = Query(default=None)
+    page: int | None = Query(default=None)
+    order: str | None = Query(default=None)

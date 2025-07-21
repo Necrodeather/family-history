@@ -35,3 +35,5 @@ class BudgetQuery(BaseModel):
     name__like: str | None
     category_id: int | None
     user_id: int | None
+    page: int | None
+    order: str | None
