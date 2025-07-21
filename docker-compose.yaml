@@ -29,6 +29,14 @@ services:
       timeout: 5s
       retries: 5
 
+  cache:
+    hostname: cache
+    container_name: cache
+    image: redis:8.0.3-bookworm
+    volumes:
+      - ./cache:/usr/local/etc/redis
+    restart: always
+
   migrations_generate:
     container_name: migrations_generate
     build:

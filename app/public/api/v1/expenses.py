@@ -2,6 +2,7 @@ from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, status
+from fastapi_cache.decorator import cache
 
 from app.domain.entities.auth import JWTUser
 from app.domain.entities.budget import (
@@ -17,6 +18,7 @@ expenses_router = APIRouter(prefix='/expenses')
 
 
 @expenses_router.get('/')
+@cache(expire=60)
 async def get(
     query: Annotated[BudgetQueryApi, Depends()],
     _: Annotated[JWTUser, Depends(decode_token)],

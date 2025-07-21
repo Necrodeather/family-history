@@ -45,5 +45,18 @@ class AppSettings(BaseSettings):
     algorithm: str = 'HS256'
 
 
+class RedisSettings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file='./.env',
+        env_prefix='redis_',
+        extra='ignore',
+    )
+
+    host: str = 'localhost'
+    port: int = 6379
+    db: int = 0
+
+
 database_settings: DatabaseSettings = get_settings(DatabaseSettings)
 app_settings: AppSettings = get_settings(AppSettings)
+redis_settings: RedisSettings = get_settings(RedisSettings)

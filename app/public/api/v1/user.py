@@ -2,6 +2,7 @@ from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends
+from fastapi_cache.decorator import cache
 
 from app.domain.entities.auth import JWTUser
 from app.domain.entities.user import UserRead
@@ -13,6 +14,7 @@ user_router = APIRouter(prefix='/user')
 
 
 @user_router.get('/')
+@cache(expire=60)
 async def get(
     query: Annotated[UserQueryApi, Depends()],
     _: Annotated[JWTUser, Depends(decode_token)],
