@@ -4,7 +4,11 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, status
 
 from app.domain.entities.auth import JWTUser
-from app.domain.entities.category import CategoryCreateUpdateForm, CategoryRead
+from app.domain.entities.category import (
+    CategoryCreateForm,
+    CategoryRead,
+    CategoryUpdateForm,
+)
 from app.public.api.permission import decode_token
 from app.public.api.schemas import CategoryQueryApi, ErrorMessage
 from app.service.category import expenses_category_service
@@ -41,9 +45,10 @@ async def get_by_id(
     },
 )
 async def create(
-    category: CategoryCreateUpdateForm,
-    _: Annotated[JWTUser, Depends(decode_token)],
+    category: CategoryCreateForm,
+    user: Annotated[JWTUser, Depends(decode_token)],
 ) -> CategoryRead:
+    category.user_id = user.id
     return await expenses_category_service.create(category)
 
 
@@ -55,9 +60,10 @@ async def create(
 )
 async def update(
     category_id: UUID,
-    category: CategoryCreateUpdateForm,
-    _: Annotated[JWTUser, Depends(decode_token)],
+    category: CategoryUpdateForm,
+    user: Annotated[JWTUser, Depends(decode_token)],
 ) -> CategoryRead:
+    category.updated_user_id = user.id
     return await expenses_category_service.update_by_id(category_id, category)
 
 

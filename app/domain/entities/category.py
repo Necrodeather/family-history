@@ -5,11 +5,17 @@ from pydantic import UUID4, BaseModel
 from app.domain.entities.base import BaseEntity
 
 
-class CategoryCreateUpdateForm(BaseModel):
+class CategoryCreateForm(BaseModel):
     name: str
+    user_id: UUID4 | None = None
 
 
-class CategoryRead(CategoryCreateUpdateForm, BaseEntity):
+class CategoryUpdateForm(BaseModel):
+    name: str
+    updated_user_id: UUID4 | None = None
+
+
+class CategoryRead(CategoryCreateForm, CategoryUpdateForm, BaseEntity):
     id: UUID4
     created_at: datetime
     updated_at: datetime

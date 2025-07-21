@@ -11,7 +11,7 @@ def get_settings(cls: type[TSettings]) -> TSettings:
 
 class DatabaseSettings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file='~/.env',
+        env_file='./.env',
         env_prefix='postgres_',
         extra='ignore',
     )
@@ -31,7 +31,7 @@ class DatabaseSettings(BaseSettings):
 
 class AppSettings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file='~/.env',
+        env_file='./.env',
         env_prefix='app_',
         extra='ignore',
     )

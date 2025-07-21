@@ -40,8 +40,9 @@ async def get_by_id(
 @expenses_router.post('/', status_code=status.HTTP_201_CREATED)
 async def create(
     expenses: BudgetCreateForm,
-    _: Annotated[JWTUser, Depends(decode_token)],
+    user: Annotated[JWTUser, Depends(decode_token)],
 ) -> BudgetRead:
+    expenses.user_id = user.id
     return await expenses_service.create(expenses)
 
 
@@ -54,8 +55,9 @@ async def create(
 async def update(
     expenses_id: UUID,
     expenses: BudgetUpdateForm,
-    _: Annotated[JWTUser, Depends(decode_token)],
+    user: Annotated[JWTUser, Depends(decode_token)],
 ) -> BudgetRead:
+    expenses.updated_user_id = user.id
     return await expenses_service.update_by_id(expenses_id, expenses)
 
 

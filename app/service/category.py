@@ -1,4 +1,8 @@
-from app.domain.entities.category import CategoryCreateUpdateForm, CategoryRead
+from app.domain.entities.category import (
+    CategoryCreateForm,
+    CategoryRead,
+    CategoryUpdateForm,
+)
 from app.infrastructure.database.repository.crud.category import (
     expenses_category_crud,
     income_category_crud,
@@ -9,8 +13,8 @@ from app.service.base import AppCRUDService
 
 class CategoryService(
     AppCRUDService[
-        CategoryCreateUpdateForm,
-        CategoryCreateUpdateForm,
+        CategoryCreateForm,
+        CategoryUpdateForm,
         CategoryRead,
     ]
 ):

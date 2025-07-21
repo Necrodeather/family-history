@@ -13,6 +13,7 @@ class BudgetCreateForm(BaseModel):
     category_id: UUID4
     amount: Decimal
     date: date_type
+    user_id: UUID4 | None = None
 
 
 class BudgetUpdateForm(BaseModel):
@@ -20,12 +21,14 @@ class BudgetUpdateForm(BaseModel):
     category_id: UUID4 | None = None
     amount: Decimal | None = None
     date: date_type | None = None
+    updated_user_id: UUID4 | None = None
 
 
 class BudgetRead(BudgetCreateForm, BaseEntity):
     id: UUID4
     created_at: datetime
     updated_at: datetime
+    user_id: UUID4
 
 
 class BudgetQuery(BaseModel):
