@@ -1,4 +1,3 @@
-from functools import lru_cache
 from typing import TypeVar
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -6,14 +5,13 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 TSettings = TypeVar('TSettings', bound=BaseSettings)
 
 
-@lru_cache()
 def get_settings(cls: type[TSettings]) -> TSettings:
     return cls()
 
 
 class DatabaseSettings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file='~/.env',
+        env_file='./.env',
         env_prefix='postgres_',
         extra='ignore',
     )
@@ -33,7 +31,7 @@ class DatabaseSettings(BaseSettings):
 
 class AppSettings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file='~/.env',
+        env_file='./.env',
         env_prefix='app_',
         extra='ignore',
     )
@@ -47,5 +45,18 @@ class AppSettings(BaseSettings):
     algorithm: str = 'HS256'
 
 
+class RedisSettings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file='./.env',
+        env_prefix='redis_',
+        extra='ignore',
+    )
+
+    host: str = 'localhost'
+    port: int = 6379
+    db: int = 0
+
+
 database_settings: DatabaseSettings = get_settings(DatabaseSettings)
 app_settings: AppSettings = get_settings(AppSettings)
+redis_settings: RedisSettings = get_settings(RedisSettings)

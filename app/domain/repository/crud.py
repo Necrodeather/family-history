@@ -10,8 +10,9 @@ class CRUDRepository[
     UpdateSchemaT: BaseModel,
 ](ABC):
     @abstractmethod
-    async def get_all(
+    async def get_multi(
         self,
+        query: Any,
     ) -> Sequence[ModelT]:
         raise NotImplementedError()
 

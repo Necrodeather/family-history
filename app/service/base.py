@@ -1,9 +1,11 @@
+from typing import Type
 from uuid import UUID
 
 from app.domain.exceptions import NotFoundError
 from app.domain.service.crud import CRUDService
 from app.domain.types import (
     CreateSchemaType,
+    QuerySchemaType,
     ReadSchemaType,
     UpdateSchemaType,
 )
@@ -16,9 +18,11 @@ class AppCRUDService(
         ReadSchemaType,
     ]
 ):
-    async def get_all(self) -> list[ReadSchemaType]:
+    async def get_multi(
+        self, query: Type[QuerySchemaType]
+    ) -> list[ReadSchemaType]:
         async with self._uow as uow:
-            result = await uow.repository.get_all()
+            result = await uow.repository.get_multi(query)
         return self._read_entity.from_list(result)
 
     async def get_by_id(self, entity_id: UUID | str) -> ReadSchemaType:

@@ -8,7 +8,7 @@ from app.public.api.permission import (
     create_token,
     decode_token,
 )
-from app.public.api.schemas import Message
+from app.public.api.schemas import ErrorMessage
 from app.service.user import auth_service
 
 auth_router = APIRouter(prefix='/auth')
@@ -17,7 +17,7 @@ auth_router = APIRouter(prefix='/auth')
 @auth_router.post(
     '/login',
     responses={
-        401: {'model': Message},
+        401: {'model': ErrorMessage},
     },
 )
 async def login(login_user_form: LoginUser) -> JWTToken:
@@ -29,7 +29,13 @@ async def login(login_user_form: LoginUser) -> JWTToken:
     )
 
 
-@auth_router.post('/register', status_code=status.HTTP_201_CREATED)
+@auth_router.post(
+    '/register',
+    status_code=status.HTTP_201_CREATED,
+    responses={
+        409: {'model': ErrorMessage},
+    },
+)
 async def register(create_user_form: UserCreate) -> UserRead:
     return await auth_service.create(create_user_form)
 

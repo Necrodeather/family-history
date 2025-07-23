@@ -2,6 +2,7 @@ from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, status
+from fastapi_cache.decorator import cache
 
 from app.domain.entities.auth import JWTUser
 from app.domain.entities.budget import (
@@ -10,57 +11,61 @@ from app.domain.entities.budget import (
     BudgetUpdateForm,
 )
 from app.public.api.permission import decode_token
-from app.public.api.schemas import Message
+from app.public.api.schemas import BudgetQueryApi, ErrorMessage
 from app.service.budget import income_service
 
 income_router = APIRouter(prefix='/income')
 
 
 @income_router.get('/')
-async def get_all(
+@cache(expire=60)
+async def get(
+    query: Annotated[BudgetQueryApi, Depends()],
     _: Annotated[JWTUser, Depends(decode_token)],
 ) -> list[BudgetRead]:
-    return await income_service.get_all()
+    return await income_service.get_multi(query)
 
 
 @income_router.get(
-    '/{category_id}',
+    '/{income_id}',
     responses={
-        404: {'model': Message},
+        404: {'model': ErrorMessage},
     },
 )
 async def get_by_id(
-    category_id: UUID,
+    income_id: UUID,
     _: Annotated[JWTUser, Depends(decode_token)],
 ) -> BudgetRead:
-    return await income_service.get_by_id(category_id)
+    return await income_service.get_by_id(income_id)
 
 
 @income_router.post('/', status_code=status.HTTP_201_CREATED)
 async def create(
-    category: BudgetCreateForm,
-    _: Annotated[JWTUser, Depends(decode_token)],
+    income: BudgetCreateForm,
+    user: Annotated[JWTUser, Depends(decode_token)],
 ) -> BudgetRead:
-    return await income_service.create(category)
+    income.user_id = user.id
+    return await income_service.create(income)
 
 
 @income_router.put(
-    '/{category_id}',
+    '/{income_id}',
     responses={
-        404: {'model': Message},
+        404: {'model': ErrorMessage},
     },
 )
 async def update(
-    category_id: UUID,
-    category: BudgetUpdateForm,
-    _: Annotated[JWTUser, Depends(decode_token)],
+    income_id: UUID,
+    income: BudgetUpdateForm,
+    user: Annotated[JWTUser, Depends(decode_token)],
 ) -> BudgetRead:
-    return await income_service.update_by_id(category_id, category)
+    income.updated_user_id = user.id
+    return await income_service.update_by_id(income_id, income)
 
 
-@income_router.delete('/{category_id}', status_code=status.HTTP_204_NO_CONTENT)
+@income_router.delete('/{income_id}', status_code=status.HTTP_204_NO_CONTENT)
 async def delete(
-    category_id: UUID,
+    income_id: UUID,
     _: Annotated[JWTUser, Depends(decode_token)],
 ) -> None:
-    await income_service.delete_by_id(category_id)
+    await income_service.delete_by_id(income_id)
