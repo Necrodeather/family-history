@@ -23,16 +23,20 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "coverage>=7.9.2",
+    "factory-boy>=3.3.3",
+    "httpx>=0.28.1",
     "mypy>=1.13.0",
+    "pytest>=8.4.1",
+    "pytest-asyncio>=1.1.0",
+    "pytest-mock>=3.14.1",
     "ruff>=0.7.3",
 ]
 
 
 [tool.mypy]
 follow_imports = "skip"
-plugins = [
-  "pydantic.mypy"
-]
+plugins = ["pydantic.mypy"]
 exclude = [".venv"]
 warn_redundant_casts = true
 warn_unused_ignores = true
@@ -86,3 +90,26 @@ docstring-code-format = true
 
 [tool.ruff.lint.isort]
 case-sensitive = true
+
+[tool.pytest.ini_options]
+pythonpath = "app"
+filterwarnings = [
+    'ignore::DeprecationWarning', # 'crypt' is deprecated and slated for removal in Python 3.13
+    'ignore::UserWarning',        # Pydantic serializer warnings
+]
+asyncio_mode = "auto"
+
+
+[tool.coverage.report]
+omit = [
+    "tests/*",
+    "app/domain/*",
+    "app/public/api/app.py",
+    "app/infrastructure/database/uow.py",
+    "*base.py",
+]
+show_missing = true
+skip_covered = true
+skip_empty = true
+precision = 2
+fail_under = 100

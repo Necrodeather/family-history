@@ -18,8 +18,8 @@ class CategoryQueryApi(CategoryQuery):
 
 class BudgetQueryApi(BudgetQuery):
     name__like: str | None = Query(default=None)
-    category_id: int | None = Query(default=None)
-    user_id: int | None = Query(default=None)
+    category_id: str | None = Query(default=None)
+    user_id: str | None = Query(default=None)
     page: int | None = Query(default=None)
     order: str | None = Query(default=None)
 

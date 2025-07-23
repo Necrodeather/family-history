@@ -25,6 +25,6 @@ class UserRead(BaseEntity):
 
 
 class UserQuery(BaseModel):
-    name__like: str | None
-    page: int | None
-    order: str | None
+    name__like: str | None = None
+    page: int | None = None
+    order: str | None = None

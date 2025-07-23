@@ -32,8 +32,8 @@ class BudgetRead(BudgetCreateForm, BaseEntity):
 
 
 class BudgetQuery(BaseModel):
-    name__like: str | None
-    category_id: int | None
-    user_id: int | None
-    page: int | None
-    order: str | None
+    name__like: str | None = None
+    category_id: str | None = None
+    user_id: str | None = None
+    page: int | None = None
+    order: str | None = None
