@@ -19,6 +19,7 @@ The "Family History" project is a RESTful API for managing family budgets.
 - **Alembic** - Migration management
 - **Pydantic** - Data validation
 - **Docker** - Containerization
+- **Redis** - Cache
 
 ## 📋 Requirements
 
@@ -81,3 +82,11 @@ Main environment variables:
 | APP_REFRESH_TOKEN_EXPIRE_MINUTES| Refresh token expiration (minutes)   | `15`          |
 | APP_ALGORITHM                   | Hashing algorithm                    | `HS256`       |
 | APP_SECRET_KEY                  | Secret Key                           | -             |
+
+### Redis
+
+| Variable                        | Description                          | Default Value |
+| ------------------------------- | :----------------------------------- | :------------ |
+| REDIS_HOST                      | Redis host                           | `cache`       |
+| REDIS_PORT                      | Redis port                           | `6379`        |
+| REDIS_DB                        | Redis db                             | `false`       |
