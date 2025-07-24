@@ -6,7 +6,7 @@ from .mixins import BaseMixin, CreatedAtMixin
 
 
 class User(BaseMixin, CreatedAtMixin):
-    __tablename__ = 'users'
+    __tablename__ = 'user'
 
     first_name: Mapped[str_64]
     last_name: Mapped[str_64]

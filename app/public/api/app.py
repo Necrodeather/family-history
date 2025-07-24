@@ -29,8 +29,6 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     yield
 
 
-
-
 def create_app() -> FastAPI:
     app = FastAPI(
         title=project_info['project']['name'],

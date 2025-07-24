@@ -19,7 +19,7 @@ class Category(BaseMixin, CreatedAtMixin, UpdatedAtMixin):
 
 
 class ExpensesCategory(Category):
-    __tablename__ = 'expenses_categories'
+    __tablename__ = 'expenses_category'
 
     expenses: Mapped[list['Expenses']] = relationship(
         back_populates='category',
@@ -27,7 +27,7 @@ class ExpensesCategory(Category):
 
 
 class IncomesCategory(Category):
-    __tablename__ = 'incomes_categories'
+    __tablename__ = 'incomes_category'
 
     incomes: Mapped[list['Income']] = relationship(back_populates='category')
 
@@ -48,7 +48,7 @@ class Expenses(Budget):
     __tablename__ = 'expenses'
 
     category_id: Mapped[uuid] = mapped_column(
-        ForeignKey('expenses_categories.id'),
+        ForeignKey('expenses_category.id'),
     )
     category: Mapped['ExpensesCategory'] = relationship(
         back_populates='expenses',
@@ -56,10 +56,10 @@ class Expenses(Budget):
 
 
 class Income(Budget):
-    __tablename__ = 'incomes'
+    __tablename__ = 'income'
 
     category_id: Mapped[uuid] = mapped_column(
-        ForeignKey('incomes_categories.id'),
+        ForeignKey('incomes_category.id'),
     )
     category: Mapped['IncomesCategory'] = relationship(
         back_populates='incomes',
