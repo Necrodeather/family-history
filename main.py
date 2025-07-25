@@ -1,17 +1,16 @@
 import uvicorn
 
 from app.core.config import app_settings
+from app.public.api.app import create_app
+
+app = create_app()
 
 
-def main() -> None:
+if __name__ == '__main__':
     uvicorn.run(
-        app='app.public.api.app:app',
+        app='main:app',
         host=app_settings.host,
         port=app_settings.port,
         reload=app_settings.debug_reload,
         workers=app_settings.workers,
     )
-
-
-if __name__ == '__main__':
-    main()

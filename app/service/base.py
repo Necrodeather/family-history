@@ -1,40 +1,39 @@
 from typing import Type
 from uuid import UUID
 
+from pydantic import BaseModel
+
+from app.domain.entities.queries import BaseQuery
 from app.domain.exceptions import NotFoundError
-from app.domain.service.crud import CRUDService
-from app.domain.types import (
-    CreateSchemaType,
-    QuerySchemaType,
-    ReadSchemaType,
-    UpdateSchemaType,
-)
+from app.infrastructure.database.base import Base
+from app.infrastructure.database.repository.base import BaseRepository
 
 
-class AppCRUDService(
-    CRUDService[
-        CreateSchemaType,
-        UpdateSchemaType,
-        ReadSchemaType,
-    ]
-):
-    async def get_multi(
-        self, query: Type[QuerySchemaType]
-    ) -> list[ReadSchemaType]:
-        async with self._uow as uow:
-            result = await uow.repository.get_multi(query)
+class BaseService[
+    CreateSchemaType: BaseModel,
+    UpdateSchemaType: BaseModel,
+    ReadSchemaType: BaseModel,
+]:
+    def __init__(
+        self,
+        repository: BaseRepository[Base, CreateSchemaType, ReadSchemaType],
+        read_entity: Type[ReadSchemaType],
+    ) -> None:
+        self._repository = repository
+        self._read_entity = read_entity
+
+    async def get_multi(self, query: Type[BaseQuery]) -> list[ReadSchemaType]:
+        result = await self._repository.get_multi(query)
         return self._read_entity.from_list(result)
 
     async def get_by_id(self, entity_id: UUID | str) -> ReadSchemaType:
-        async with self._uow as uow:
-            result = await uow.repository.get_by_id(entity_id)
+        result = await self._repository.get_by_id(entity_id)
         if not result:
             raise NotFoundError()
         return self._read_entity.model_validate(result)
 
     async def create(self, entity: CreateSchemaType) -> ReadSchemaType:
-        async with self._uow as uow:
-            result = await uow.repository.create(entity)
+        result = await self._repository.create(entity)
         return self._read_entity.model_validate(result)
 
     async def update_by_id(
@@ -42,12 +41,10 @@ class AppCRUDService(
         entity_id: UUID,
         entity: UpdateSchemaType,
     ) -> ReadSchemaType:
-        async with self._uow as uow:
-            result = await uow.repository.update_by_id(entity_id, entity)
+        result = await self._repository.update_by_id(entity_id, entity)
         if not result:
             raise NotFoundError()
         return self._read_entity.model_validate(result)
 
     async def delete_by_id(self, entity_id: UUID) -> None:
-        async with self._uow as uow:
-            await uow.repository.delete_by_id(entity_id)
+        await self._repository.delete_by_id(entity_id)

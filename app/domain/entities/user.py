@@ -1,4 +1,6 @@
-from pydantic import UUID4, BaseModel, EmailStr
+from typing import Self, Type
+
+from pydantic import UUID4, BaseModel, EmailStr, model_validator
 
 from .base import BaseEntity
 
@@ -24,7 +26,11 @@ class UserRead(BaseEntity):
     email: EmailStr
 
 
-class UserQuery(BaseModel):
-    name__like: str | None = None
-    page: int | None = None
-    order: str | None = None
+class UserRelation(BaseEntity):
+    name: str
+
+    @model_validator(mode='before')
+    @classmethod
+    def combine_fields(cls, data: Type[BaseModel]) -> Type[Self]:
+        cls.name = f'{data.first_name} {data.last_name}'
+        return cls

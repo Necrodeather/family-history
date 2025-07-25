@@ -1,26 +1,32 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, status
-from fastapi_cache.decorator import cache
+from dependency_injector.wiring import Provide, inject
+from fastapi import APIRouter, Depends, Query, status
 
+from app.core.depends import ApiContainer
 from app.domain.entities.auth import JWTUser
 from app.domain.entities.category import (
-    CategoryCreateForm,
+    CategoryCreate,
     CategoryRead,
-    CategoryUpdateForm,
+    CategoryUpdate,
 )
+from app.domain.entities.queries import CategoryQuery
 from app.public.api.permission import decode_token
-from app.public.api.schemas import CategoryQueryApi, ErrorMessage
-from app.service.category import expenses_category_service
+from app.public.api.schemas import ErrorMessage
+from app.service.category import CategoryService
 
 expenses_category_router = APIRouter(prefix='/expenses_category')
 
 
 @expenses_category_router.get('/')
-@cache(expire=60)
+@inject
 async def get(
-    query: Annotated[CategoryQueryApi, Depends()],
+    query: Annotated[CategoryQuery, Query()],
+    expenses_category_service: Annotated[
+        CategoryService,
+        Depends(Provide[ApiContainer.expenses_category_service]),
+    ],
     _: Annotated[JWTUser, Depends(decode_token)],
 ) -> list[CategoryRead]:
     return await expenses_category_service.get_multi(query)
@@ -32,8 +38,13 @@ async def get(
         404: {'model': ErrorMessage},
     },
 )
+@inject
 async def get_by_id(
     category_id: UUID,
+    expenses_category_service: Annotated[
+        CategoryService,
+        Depends(Provide[ApiContainer.expenses_category_service]),
+    ],
     _: Annotated[JWTUser, Depends(decode_token)],
 ) -> CategoryRead:
     return await expenses_category_service.get_by_id(category_id)
@@ -46,8 +57,13 @@ async def get_by_id(
         409: {'model': ErrorMessage},
     },
 )
+@inject
 async def create(
-    category: CategoryCreateForm,
+    category: CategoryCreate,
+    expenses_category_service: Annotated[
+        CategoryService,
+        Depends(Provide[ApiContainer.expenses_category_service]),
+    ],
     user: Annotated[JWTUser, Depends(decode_token)],
 ) -> CategoryRead:
     category.user_id = user.id
@@ -60,9 +76,14 @@ async def create(
         404: {'model': ErrorMessage},
     },
 )
+@inject
 async def update(
     category_id: UUID,
-    category: CategoryUpdateForm,
+    category: CategoryUpdate,
+    expenses_category_service: Annotated[
+        CategoryService,
+        Depends(Provide[ApiContainer.expenses_category_service]),
+    ],
     user: Annotated[JWTUser, Depends(decode_token)],
 ) -> CategoryRead:
     category.updated_user_id = user.id
@@ -73,8 +94,13 @@ async def update(
     '/{category_id}',
     status_code=status.HTTP_204_NO_CONTENT,
 )
+@inject
 async def delete(
     category_id: UUID,
+    expenses_category_service: Annotated[
+        CategoryService,
+        Depends(Provide[ApiContainer.expenses_category_service]),
+    ],
     _: Annotated[JWTUser, Depends(decode_token)],
 ) -> None:
     await expenses_category_service.delete_by_id(category_id)

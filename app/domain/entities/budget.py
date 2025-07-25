@@ -6,9 +6,10 @@ from decimal import Decimal
 from pydantic import UUID4, BaseModel
 
 from app.domain.entities.base import BaseEntity
+from app.domain.entities.user import UserRelation
 
 
-class BudgetCreateForm(BaseModel):
+class BudgetCreate(BaseModel):
     name: str
     category_id: UUID4
     amount: Decimal
@@ -16,7 +17,7 @@ class BudgetCreateForm(BaseModel):
     user_id: UUID4 | None = None
 
 
-class BudgetUpdateForm(BaseModel):
+class BudgetUpdate(BaseModel):
     name: str | None = None
     category_id: UUID4 | None = None
     amount: Decimal | None = None
@@ -24,16 +25,10 @@ class BudgetUpdateForm(BaseModel):
     updated_user_id: UUID4 | None = None
 
 
-class BudgetRead(BudgetCreateForm, BaseEntity):
+class BudgetRead(BudgetCreate, BaseEntity):
     id: UUID4
     created_at: datetime
     updated_at: datetime
     user_id: UUID4
-
-
-class BudgetQuery(BaseModel):
-    name__like: str | None = None
-    category_id: str | None = None
-    user_id: str | None = None
-    page: int | None = None
-    order: str | None = None
+    user: UserRelation
+    update_user: UserRelation | None

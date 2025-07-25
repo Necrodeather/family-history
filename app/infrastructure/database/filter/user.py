@@ -1,11 +1,10 @@
 from sqlalchemy import BinaryExpression, and_
 
-from app.domain.entities.user import UserQuery
-from app.infrastructure.database.models.user import User
-from app.infrastructure.database.repository.filter.base import SqlAlchemyFilter
+from app.domain.entities.queries import UserQuery
+from app.infrastructure.database.filter.base import BaseFilter
 
 
-class UserFilter(SqlAlchemyFilter):
+class UserFilter(BaseFilter):
     def where(self, query: UserQuery) -> BinaryExpression | None:
         if query.name__like:
             return and_(
@@ -13,6 +12,3 @@ class UserFilter(SqlAlchemyFilter):
                 | self._model.last_name.ilike(f'%{query.name__like}%')
             )
         return None
-
-
-user_filter = UserFilter(User)
