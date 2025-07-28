@@ -3,6 +3,7 @@ from uuid import UUID
 
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, Query, status
+from fastapi_cache.decorator import cache
 
 from containers.root import AppContainer
 from domain.entities.auth import JWTUser
@@ -14,12 +15,13 @@ from domain.entities.category import (
 from domain.entities.queries import CategoryQuery
 from public.api.permission import decode_token
 from public.api.schemas import ErrorMessage
-from service.category import CategoryService
+from services.category import CategoryService
 
 expenses_category_router = APIRouter(prefix='/expenses_category')
 
 
 @expenses_category_router.get('/')
+@cache(expire=60)
 @inject
 async def get(
     query: Annotated[CategoryQuery, Query()],
@@ -38,6 +40,7 @@ async def get(
         404: {'model': ErrorMessage},
     },
 )
+@cache(expire=60)
 @inject
 async def get_by_id(
     category_id: UUID,

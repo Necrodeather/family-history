@@ -8,7 +8,7 @@ from infrastructure.database.repository.user import (
     AuthRepository,
     UserRepository,
 )
-from service.user import AuthService, UserService
+from services.user import AuthService, UserService
 
 
 class UserContainer(containers.DeclarativeContainer):

@@ -1,9 +1,13 @@
 import uvicorn
 
-from core.config import app_settings
+from containers.root import AppContainer
+from core.config import app_settings, database_settings
 from public.api.app import create_app
+from public.api.lifespan import initial_fastapi_cache
 
-app = create_app()
+container = AppContainer()
+container.database_config.from_pydantic(database_settings)
+app = create_app(container=container, lifespan=initial_fastapi_cache)
 
 
 if __name__ == '__main__':

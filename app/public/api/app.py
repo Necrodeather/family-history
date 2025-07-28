@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Any, Sequence
 
 from dependency_injector.containers import DeclarativeContainer
 from fastapi import FastAPI
@@ -6,7 +6,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 
 from containers.root import AppContainer
-from core.config import database_settings
 
 from .error_handlers import error_handlers
 from .utils import read_pyproject_toml
@@ -18,7 +17,7 @@ class Server:
 
     def __init__(self, app: FastAPI, container: DeclarativeContainer) -> None:
         self.app = app
-        self.container = container
+        self.app.container = container
 
         self._register_middleware(app)
         self._register_routers(app)
@@ -32,6 +31,7 @@ class Server:
     def _base_information(app: FastAPI) -> None:
         if app.openapi_schema:
             return app.openapi_schema
+
         project_info = read_pyproject_toml()
         app.openapi_schema = get_openapi(
             title=project_info['project']['name'],
@@ -64,8 +64,10 @@ class Server:
             app.add_exception_handler(handler.__annotations__['exc'], handler)
 
 
-def create_app() -> FastAPI:
-    app = FastAPI()
-    container = AppContainer()
-    container.database_config.from_pydantic(database_settings)
+def create_app(
+    container: AppContainer,
+    *args: Any,
+    **kwargs: Any,
+) -> FastAPI:
+    app = FastAPI(*args, **kwargs)
     return Server(app=app, container=container).get_app()

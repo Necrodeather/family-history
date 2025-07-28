@@ -11,7 +11,7 @@ from public.api.permission import (
     decode_token,
 )
 from public.api.schemas import ErrorMessage
-from service.user import AuthService
+from services.user import AuthService
 
 auth_router = APIRouter(prefix='/auth')
 

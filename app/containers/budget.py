@@ -13,7 +13,7 @@ from infrastructure.database.repository.budget import (
     ExpensesRepository,
     IncomeRepository,
 )
-from service.budget import BudgetService
+from services.budget import BudgetService
 
 
 class ExpensesContainer(containers.DeclarativeContainer):

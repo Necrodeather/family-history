@@ -11,7 +11,7 @@ from infrastructure.database.repository.category import (
     ExpensesCategoryRepository,
     IncomesCategoryRepository,
 )
-from service.category import CategoryService
+from services.category import CategoryService
 
 
 class ExpensesCategoryContainer(containers.DeclarativeContainer):

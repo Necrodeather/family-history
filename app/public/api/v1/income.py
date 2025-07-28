@@ -3,6 +3,7 @@ from uuid import UUID
 
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, Query, status
+from fastapi_cache.decorator import cache
 
 from containers.root import AppContainer
 from domain.entities.auth import JWTUser
@@ -14,12 +15,13 @@ from domain.entities.budget import (
 from domain.entities.queries import BudgetQuery
 from public.api.permission import decode_token
 from public.api.schemas import ErrorMessage
-from service.budget import BudgetService
+from services.budget import BudgetService
 
 income_router = APIRouter(prefix='/income')
 
 
 @income_router.get('/')
+@cache(expire=60)
 @inject
 async def get(
     query: Annotated[BudgetQuery, Query()],
@@ -38,6 +40,7 @@ async def get(
         404: {'model': ErrorMessage},
     },
 )
+@cache(expire=60)
 @inject
 async def get_by_id(
     income_id: UUID,
