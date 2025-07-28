@@ -1,12 +1,12 @@
 from sqlalchemy.exc import IntegrityError
 
-from app.domain.entities.category import CategoryCreate
-from app.domain.exceptions import EntityAlreadyError
-from app.infrastructure.database.models.category import (
+from domain.entities.category import CategoryCreate
+from domain.exceptions import EntityAlreadyError
+from infrastructure.database.models.category import (
     ExpensesCategory,
     IncomesCategory,
 )
-from app.infrastructure.database.repository.base import (
+from infrastructure.database.repository.base import (
     BaseRepository,
 )
 

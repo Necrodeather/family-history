@@ -1,6 +1,6 @@
 from pydantic import UUID4, BaseModel, EmailStr, field_validator
 
-from app.domain.entities.base import BaseEntity
+from domain.entities.base import BaseEntity
 
 
 class Token(BaseModel):

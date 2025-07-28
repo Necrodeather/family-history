@@ -1,7 +1,7 @@
 from sqlalchemy import BinaryExpression, and_
 
-from app.domain.entities.queries import UserQuery
-from app.infrastructure.database.filter.base import BaseFilter
+from domain.entities.queries import UserQuery
+from infrastructure.database.filter.base import BaseFilter
 
 
 class UserFilter(BaseFilter):

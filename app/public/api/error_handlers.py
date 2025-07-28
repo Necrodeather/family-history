@@ -1,7 +1,7 @@
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
-from app.domain.exceptions import (
+from domain.exceptions import (
     CredentialsError,
     EntityAlreadyError,
     IncorrectLoginError,

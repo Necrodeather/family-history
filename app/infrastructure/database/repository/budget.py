@@ -1,6 +1,6 @@
-from app.domain.entities.budget import BudgetCreate, BudgetUpdate
-from app.infrastructure.database.models.budget import Expenses, Income
-from app.infrastructure.database.repository.base import (
+from domain.entities.budget import BudgetCreate, BudgetUpdate
+from infrastructure.database.models.budget import Expenses, Income
+from infrastructure.database.repository.base import (
     BaseRepository,
 )
 

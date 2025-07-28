@@ -4,13 +4,13 @@ from uuid import UUID
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, Query
 
-from app.core.depends import ApiContainer
-from app.domain.entities.auth import JWTUser
-from app.domain.entities.queries import UserQuery
-from app.domain.entities.user import UserRead
-from app.public.api.permission import decode_token
-from app.public.api.schemas import ErrorMessage
-from app.service.user import UserService
+from containers.root import AppContainer
+from domain.entities.auth import JWTUser
+from domain.entities.queries import UserQuery
+from domain.entities.user import UserRead
+from public.api.permission import decode_token
+from public.api.schemas import ErrorMessage
+from service.user import UserService
 
 user_router = APIRouter(prefix='/user')
 
@@ -20,7 +20,7 @@ user_router = APIRouter(prefix='/user')
 async def get(
     query: Annotated[UserQuery, Query()],
     user_service: Annotated[
-        UserService, Depends(Provide[ApiContainer.user_service])
+        UserService, Depends(Provide[AppContainer.user.service])
     ],
     _: Annotated[JWTUser, Depends(decode_token)],
 ) -> list[UserRead]:
@@ -37,7 +37,7 @@ async def get(
 async def get_by_id(
     user_id: UUID,
     user_service: Annotated[
-        UserService, Depends(Provide[ApiContainer.user_service])
+        UserService, Depends(Provide[AppContainer.user.service])
     ],
     _: Annotated[JWTUser, Depends(decode_token)],
 ) -> UserRead:

@@ -3,15 +3,15 @@ from typing import Annotated
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, status
 
-from app.core.depends import ApiContainer
-from app.domain.entities.auth import JWTToken, JWTUser, LoginUser
-from app.domain.entities.user import UserCreate, UserRead
-from app.public.api.permission import (
+from containers.root import AppContainer
+from domain.entities.auth import JWTToken, JWTUser, LoginUser
+from domain.entities.user import UserCreate, UserRead
+from public.api.permission import (
     create_token,
     decode_token,
 )
-from app.public.api.schemas import ErrorMessage
-from app.service.user import AuthService
+from public.api.schemas import ErrorMessage
+from service.user import AuthService
 
 auth_router = APIRouter(prefix='/auth')
 
@@ -27,7 +27,7 @@ async def login(
     login_user_form: LoginUser,
     auth_service: Annotated[
         AuthService,
-        Depends(Provide[ApiContainer.auth_service]),
+        Depends(Provide[AppContainer.auth.service]),
     ],
 ) -> JWTToken:
     user = await auth_service.login(login_user_form)
@@ -50,7 +50,7 @@ async def register(
     create_user_form: UserCreate,
     auth_service: Annotated[
         AuthService,
-        Depends(Provide[ApiContainer.auth_service]),
+        Depends(Provide[AppContainer.auth.service]),
     ],
 ) -> UserRead:
     return await auth_service.create(create_user_form)
@@ -71,7 +71,7 @@ async def refresh_access_token(
 async def me(
     auth_service: Annotated[
         AuthService,
-        Depends(Provide[ApiContainer.auth_service]),
+        Depends(Provide[AppContainer.auth.service]),
     ],
     user: Annotated[JWTUser, Depends(decode_token)],
 ) -> UserRead:

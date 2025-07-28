@@ -1,9 +1,10 @@
-from app.domain.entities.budget import (
+from domain.entities.budget import (
     BudgetCreate,
     BudgetRead,
     BudgetUpdate,
 )
-from app.service.base import BaseService
+
+from .base import BaseService
 
 
 class BudgetService(

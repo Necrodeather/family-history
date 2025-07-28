@@ -14,10 +14,10 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import joinedload, selectinload
 
-from app.domain.entities.queries import BaseQuery
-from app.infrastructure.database.base import Base
-from app.infrastructure.database.engine import SqlAlchemyEngine
-from app.infrastructure.database.filter.base import BaseFilter
+from domain.entities.queries import BaseQuery
+from infrastructure.database.base import Base
+from infrastructure.database.engine import SqlAlchemyEngine
+from infrastructure.database.filter.base import BaseFilter
 
 AlchemyModelType = TypeVar('AlchemyModelType', bound=Base)
 

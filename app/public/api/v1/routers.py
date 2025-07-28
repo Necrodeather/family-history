@@ -1,11 +1,11 @@
 from fastapi import APIRouter
 
-from app.public.api.v1.auth import auth_router
-from app.public.api.v1.expenses import expenses_router
-from app.public.api.v1.expenses_category import expenses_category_router
-from app.public.api.v1.income import income_router
-from app.public.api.v1.incomes_category import incomes_category_router
-from app.public.api.v1.user import user_router
+from public.api.v1.auth import auth_router
+from public.api.v1.expenses import expenses_router
+from public.api.v1.expenses_category import expenses_category_router
+from public.api.v1.income import income_router
+from public.api.v1.incomes_category import incomes_category_router
+from public.api.v1.user import user_router
 
 budget_router = APIRouter(prefix='/budget')
 budget_router.include_router(

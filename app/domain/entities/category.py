@@ -2,8 +2,8 @@ from datetime import datetime
 
 from pydantic import UUID4, BaseModel
 
-from app.domain.entities.base import BaseEntity
-from app.domain.entities.user import UserRelation
+from domain.entities.base import BaseEntity
+from domain.entities.user import UserRelation
 
 
 class CategoryCreate(BaseModel):

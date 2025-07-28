@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.infrastructure.database.base import str_128, uuid
+from infrastructure.database.base import str_128, uuid
 
 from .mixins import BaseMixin, CreatedAtMixin, UpdatedAtMixin
 

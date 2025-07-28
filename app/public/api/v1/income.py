@@ -4,17 +4,17 @@ from uuid import UUID
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, Query, status
 
-from app.core.depends import ApiContainer
-from app.domain.entities.auth import JWTUser
-from app.domain.entities.budget import (
+from containers.root import AppContainer
+from domain.entities.auth import JWTUser
+from domain.entities.budget import (
     BudgetCreate,
     BudgetRead,
     BudgetUpdate,
 )
-from app.domain.entities.queries import BudgetQuery
-from app.public.api.permission import decode_token
-from app.public.api.schemas import ErrorMessage
-from app.service.budget import BudgetService
+from domain.entities.queries import BudgetQuery
+from public.api.permission import decode_token
+from public.api.schemas import ErrorMessage
+from service.budget import BudgetService
 
 income_router = APIRouter(prefix='/income')
 
@@ -25,7 +25,7 @@ async def get(
     query: Annotated[BudgetQuery, Query()],
     income_service: Annotated[
         BudgetService,
-        Depends(Provide[ApiContainer.income_service]),
+        Depends(Provide[AppContainer.income.service]),
     ],
     _: Annotated[JWTUser, Depends(decode_token)],
 ) -> list[BudgetRead]:
@@ -43,7 +43,7 @@ async def get_by_id(
     income_id: UUID,
     income_service: Annotated[
         BudgetService,
-        Depends(Provide[ApiContainer.income_service]),
+        Depends(Provide[AppContainer.income.service]),
     ],
     _: Annotated[JWTUser, Depends(decode_token)],
 ) -> BudgetRead:
@@ -56,7 +56,7 @@ async def create(
     income: BudgetCreate,
     income_service: Annotated[
         BudgetService,
-        Depends(Provide[ApiContainer.income_service]),
+        Depends(Provide[AppContainer.income.service]),
     ],
     user: Annotated[JWTUser, Depends(decode_token)],
 ) -> BudgetRead:
@@ -76,7 +76,7 @@ async def update(
     income: BudgetUpdate,
     income_service: Annotated[
         BudgetService,
-        Depends(Provide[ApiContainer.income_service]),
+        Depends(Provide[AppContainer.income.service]),
     ],
     user: Annotated[JWTUser, Depends(decode_token)],
 ) -> BudgetRead:
@@ -90,7 +90,7 @@ async def delete(
     income_id: UUID,
     income_service: Annotated[
         BudgetService,
-        Depends(Provide[ApiContainer.income_service]),
+        Depends(Provide[AppContainer.income.service]),
     ],
     _: Annotated[JWTUser, Depends(decode_token)],
 ) -> None:

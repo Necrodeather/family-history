@@ -1,9 +1,10 @@
-from app.domain.entities.category import (
+from domain.entities.category import (
     CategoryCreate,
     CategoryRead,
     CategoryUpdate,
 )
-from app.service.base import BaseService
+
+from .base import BaseService
 
 
 class CategoryService(

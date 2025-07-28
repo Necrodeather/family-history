@@ -1,7 +1,8 @@
-from app.domain.entities.auth import LoginUser
-from app.domain.entities.user import UserCreate, UserRead, UserUpdate
-from app.domain.exceptions import IncorrectLoginError
-from app.service.base import BaseService
+from domain.entities.auth import LoginUser
+from domain.entities.user import UserCreate, UserRead, UserUpdate
+from domain.exceptions import IncorrectLoginError
+
+from .base import BaseService
 
 
 class AuthService(

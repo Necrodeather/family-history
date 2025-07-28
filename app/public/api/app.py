@@ -5,11 +5,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 
-from app.core.config import database_settings
-from app.core.depends import ApiContainer
-from app.public.api.error_handlers import error_handlers
-from app.public.api.v1 import api_router
-from app.utils import read_pyproject_toml
+from containers.root import AppContainer
+from core.config import database_settings
+
+from .error_handlers import error_handlers
+from .utils import read_pyproject_toml
+from .v1.routers import api_router
 
 
 class Server:
@@ -17,7 +18,7 @@ class Server:
 
     def __init__(self, app: FastAPI, container: DeclarativeContainer) -> None:
         self.app = app
-        self.app.container = container
+        self.container = container
 
         self._register_middleware(app)
         self._register_routers(app)
@@ -63,8 +64,8 @@ class Server:
             app.add_exception_handler(handler.__annotations__['exc'], handler)
 
 
-def create_app() -> None:
+def create_app() -> FastAPI:
     app = FastAPI()
-    container = ApiContainer()
+    container = AppContainer()
     container.database_config.from_pydantic(database_settings)
     return Server(app=app, container=container).get_app()

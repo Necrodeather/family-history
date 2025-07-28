@@ -1,10 +1,10 @@
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
-from app.domain.entities.user import UserCreate, UserUpdate
-from app.domain.exceptions import UserAlreadyRegisteredError
-from app.infrastructure.database.models.user import User
-from app.infrastructure.database.repository.base import (
+from domain.entities.user import UserCreate, UserUpdate
+from domain.exceptions import UserAlreadyRegisteredError
+from infrastructure.database.models.user import User
+from infrastructure.database.repository.base import (
     BaseRepository,
 )
 

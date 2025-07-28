@@ -4,7 +4,7 @@ from typing import Type, TypeVar
 from pydantic import BaseModel
 from sqlalchemy import BinaryExpression
 
-from app.infrastructure.database.base import Base
+from infrastructure.database.base import Base
 
 ModelType = TypeVar('ModelType', bound=Base)
 QueryType = TypeVar('QueryType', bound=BaseModel)

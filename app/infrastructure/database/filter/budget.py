@@ -1,7 +1,7 @@
 from sqlalchemy import BinaryExpression, and_
 
-from app.domain.entities.queries import BudgetQuery, CategoryQuery
-from app.infrastructure.database.filter.base import BaseFilter
+from domain.entities.queries import BudgetQuery, CategoryQuery
+from infrastructure.database.filter.base import BaseFilter
 
 
 class BudgetFilter(BaseFilter):

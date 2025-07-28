@@ -3,10 +3,10 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from app.domain.entities.queries import BaseQuery
-from app.domain.exceptions import NotFoundError
-from app.infrastructure.database.base import Base
-from app.infrastructure.database.repository.base import BaseRepository
+from domain.entities.queries import BaseQuery
+from domain.exceptions import NotFoundError
+from infrastructure.database.base import Base
+from infrastructure.database.repository.base import BaseRepository
 
 
 class BaseService[

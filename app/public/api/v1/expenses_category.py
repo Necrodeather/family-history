@@ -4,17 +4,17 @@ from uuid import UUID
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, Query, status
 
-from app.core.depends import ApiContainer
-from app.domain.entities.auth import JWTUser
-from app.domain.entities.category import (
+from containers.root import AppContainer
+from domain.entities.auth import JWTUser
+from domain.entities.category import (
     CategoryCreate,
     CategoryRead,
     CategoryUpdate,
 )
-from app.domain.entities.queries import CategoryQuery
-from app.public.api.permission import decode_token
-from app.public.api.schemas import ErrorMessage
-from app.service.category import CategoryService
+from domain.entities.queries import CategoryQuery
+from public.api.permission import decode_token
+from public.api.schemas import ErrorMessage
+from service.category import CategoryService
 
 expenses_category_router = APIRouter(prefix='/expenses_category')
 
@@ -25,7 +25,7 @@ async def get(
     query: Annotated[CategoryQuery, Query()],
     expenses_category_service: Annotated[
         CategoryService,
-        Depends(Provide[ApiContainer.expenses_category_service]),
+        Depends(Provide[AppContainer.expenses_category.service]),
     ],
     _: Annotated[JWTUser, Depends(decode_token)],
 ) -> list[CategoryRead]:
@@ -43,7 +43,7 @@ async def get_by_id(
     category_id: UUID,
     expenses_category_service: Annotated[
         CategoryService,
-        Depends(Provide[ApiContainer.expenses_category_service]),
+        Depends(Provide[AppContainer.expenses_category.service]),
     ],
     _: Annotated[JWTUser, Depends(decode_token)],
 ) -> CategoryRead:
@@ -62,7 +62,7 @@ async def create(
     category: CategoryCreate,
     expenses_category_service: Annotated[
         CategoryService,
-        Depends(Provide[ApiContainer.expenses_category_service]),
+        Depends(Provide[AppContainer.expenses_category.service]),
     ],
     user: Annotated[JWTUser, Depends(decode_token)],
 ) -> CategoryRead:
@@ -82,7 +82,7 @@ async def update(
     category: CategoryUpdate,
     expenses_category_service: Annotated[
         CategoryService,
-        Depends(Provide[ApiContainer.expenses_category_service]),
+        Depends(Provide[AppContainer.expenses_category.service]),
     ],
     user: Annotated[JWTUser, Depends(decode_token)],
 ) -> CategoryRead:
@@ -99,7 +99,7 @@ async def delete(
     category_id: UUID,
     expenses_category_service: Annotated[
         CategoryService,
-        Depends(Provide[ApiContainer.expenses_category_service]),
+        Depends(Provide[AppContainer.expenses_category.service]),
     ],
     _: Annotated[JWTUser, Depends(decode_token)],
 ) -> None:

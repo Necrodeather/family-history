@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.infrastructure.database.base import Base, datetime_timezone, uuid_pk
+from infrastructure.database.base import Base, datetime_timezone, uuid_pk
 
 
 class BaseMixin(Base):
