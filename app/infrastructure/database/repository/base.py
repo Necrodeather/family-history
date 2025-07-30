@@ -1,4 +1,4 @@
-from typing import Any, Sequence, Type, TypeVar
+from typing import Any, Sequence, Type
 
 from pydantic import BaseModel
 from sqlalchemy import (
@@ -10,6 +10,7 @@ from sqlalchemy import (
     insert,
     inspect,
     select,
+    text,
     update,
 )
 from sqlalchemy.orm import joinedload, selectinload
@@ -19,18 +20,16 @@ from infrastructure.database.base import Base
 from infrastructure.database.engine import SqlAlchemyEngine
 from infrastructure.database.filter.base import BaseFilter
 
-AlchemyModelType = TypeVar('AlchemyModelType', bound=Base)
-
 
 class BaseRepository[
-    ModelType: BaseModel,
+    ModelType: Base,
     CreateSchemaType: BaseModel,
     UpdateSchemaType: BaseModel,
 ]:
     def __init__(
         self,
         engine: SqlAlchemyEngine,
-        model: Type[AlchemyModelType],
+        model: Type[ModelType],
         filter: BaseFilter,
     ) -> None:
         self._model = model
@@ -80,8 +79,9 @@ class BaseRepository[
         stmt = self._get_selectinload(stmt)
 
         async with self._engine.session() as session:
-            result = await session.execute(stmt)
-            await session.commit()
+            async with session.begin():
+                result = await session.execute(stmt)
+                await session.commit()
         return result.scalar()
 
     async def update_by_id(
@@ -97,7 +97,9 @@ class BaseRepository[
         )
         stmt = self._get_selectinload(stmt)
         async with self._engine.session() as session:
-            result = await session.execute(stmt)
+            async with session.begin():
+                result = await session.execute(stmt)
+                await session.commit()
         return result.scalar()
 
     async def delete_by_id(self, entity_id: Any) -> None:
@@ -106,14 +108,14 @@ class BaseRepository[
             await session.execute(stmt)
 
     def _order_by(self, order: str | None) -> UnaryExpression | None:
-        if order is None:
+        if not order:
             return None
 
         if order.startswith('-'):
             order = order[1:]
-            return desc(order)
+            return desc(text(order))
 
-        return asc(order)
+        return asc(text(order))
 
     def _get_joinedload(self, stmt: Select) -> Select:
         for rel in inspect(self._model).relationships:

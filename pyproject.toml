@@ -75,6 +75,7 @@ exclude = [
     "build",
     "dist",
     "node_modules",
+    "alembic",
 ]
 line-length = 79
 fix = true
