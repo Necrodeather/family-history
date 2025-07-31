@@ -1,26 +1,34 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, status
+from dependency_injector.wiring import Provide, inject
+from fastapi import APIRouter, Depends, Query, status
 from fastapi_cache.decorator import cache
 
-from app.domain.entities.auth import JWTUser
-from app.domain.entities.category import (
-    CategoryCreateForm,
+from containers.root import AppContainer
+from domain.entities.auth import JWTUser
+from domain.entities.category import (
+    CategoryCreate,
     CategoryRead,
-    CategoryUpdateForm,
+    CategoryUpdate,
 )
-from app.public.api.permission import decode_token
-from app.public.api.schemas import CategoryQueryApi, ErrorMessage
-from app.service.category import income_category_service
+from domain.entities.queries import CategoryQuery
+from public.api.permission import decode_token
+from public.api.schemas import ErrorMessage
+from services.category import CategoryService
 
 incomes_category_router = APIRouter(prefix='/incomes_category')
 
 
 @incomes_category_router.get('/')
 @cache(expire=60)
+@inject
 async def get(
-    query: Annotated[CategoryQueryApi, Depends()],
+    query: Annotated[CategoryQuery, Query()],
+    income_category_service: Annotated[
+        CategoryService,
+        Depends(Provide[AppContainer.incomes_category.service]),
+    ],
     _: Annotated[JWTUser, Depends(decode_token)],
 ) -> list[CategoryRead]:
     return await income_category_service.get_multi(query)
@@ -32,8 +40,14 @@ async def get(
         404: {'model': ErrorMessage},
     },
 )
+@cache(expire=60)
+@inject
 async def get_by_id(
     category_id: UUID,
+    income_category_service: Annotated[
+        CategoryService,
+        Depends(Provide[AppContainer.incomes_category.service]),
+    ],
     _: Annotated[JWTUser, Depends(decode_token)],
 ) -> CategoryRead:
     return await income_category_service.get_by_id(category_id)
@@ -46,8 +60,13 @@ async def get_by_id(
         409: {'model': ErrorMessage},
     },
 )
+@inject
 async def create(
-    category: CategoryCreateForm,
+    category: CategoryCreate,
+    income_category_service: Annotated[
+        CategoryService,
+        Depends(Provide[AppContainer.incomes_category.service]),
+    ],
     user: Annotated[JWTUser, Depends(decode_token)],
 ) -> CategoryRead:
     category.user_id = user.id
@@ -60,9 +79,14 @@ async def create(
         404: {'model': ErrorMessage},
     },
 )
+@inject
 async def update(
     category_id: UUID,
-    category: CategoryUpdateForm,
+    category: CategoryUpdate,
+    income_category_service: Annotated[
+        CategoryService,
+        Depends(Provide[AppContainer.incomes_category.service]),
+    ],
     user: Annotated[JWTUser, Depends(decode_token)],
 ) -> CategoryRead:
     category.updated_user_id = user.id
@@ -73,8 +97,13 @@ async def update(
     '/{category_id}',
     status_code=status.HTTP_204_NO_CONTENT,
 )
+@inject
 async def delete(
     category_id: UUID,
+    income_category_service: Annotated[
+        CategoryService,
+        Depends(Provide[AppContainer.incomes_category.service]),
+    ],
     _: Annotated[JWTUser, Depends(decode_token)],
 ) -> None:
     await income_category_service.delete_by_id(category_id)

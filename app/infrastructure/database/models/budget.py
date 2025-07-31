@@ -3,33 +3,9 @@ from __future__ import annotations
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.infrastructure.database.base import date_sql, decimal, str_128, uuid
+from infrastructure.database.base import date_sql, decimal, str_128, uuid
 
 from .mixins import BaseMixin, CreatedAtMixin, UpdatedAtMixin
-
-
-class Category(BaseMixin, CreatedAtMixin, UpdatedAtMixin):
-    __abstract__ = True
-
-    name: Mapped[str_128] = mapped_column(unique=True)
-    user_id: Mapped[uuid] = mapped_column(ForeignKey('users.id'))
-    updated_user_id: Mapped[uuid | None] = mapped_column(
-        ForeignKey('users.id')
-    )
-
-
-class ExpensesCategory(Category):
-    __tablename__ = 'expenses_categories'
-
-    expenses: Mapped[list['Expenses']] = relationship(
-        back_populates='category',
-    )
-
-
-class IncomesCategory(Category):
-    __tablename__ = 'incomes_categories'
-
-    incomes: Mapped[list['Income']] = relationship(back_populates='category')
 
 
 class Budget(BaseMixin, CreatedAtMixin, UpdatedAtMixin):
@@ -38,29 +14,33 @@ class Budget(BaseMixin, CreatedAtMixin, UpdatedAtMixin):
     name: Mapped[str_128]
     amount: Mapped[decimal]
     date: Mapped[date_sql]
-    user_id: Mapped[uuid] = mapped_column(ForeignKey('users.id'))
-    updated_user_id: Mapped[uuid | None] = mapped_column(
-        ForeignKey('users.id')
-    )
+    user_id: Mapped[uuid] = mapped_column(ForeignKey('user.id'))
+    updated_user_id: Mapped[uuid | None] = mapped_column(ForeignKey('user.id'))
 
 
 class Expenses(Budget):
     __tablename__ = 'expenses'
 
     category_id: Mapped[uuid] = mapped_column(
-        ForeignKey('expenses_categories.id'),
+        ForeignKey('expenses_category.id'),
     )
-    category: Mapped['ExpensesCategory'] = relationship(
-        back_populates='expenses',
+    user: Mapped['User'] = relationship(
+        primaryjoin='User.id == Expenses.user_id'
+    )
+    updated_user: Mapped['User'] = relationship(
+        primaryjoin='User.id == Expenses.updated_user_id'
     )
 
 
 class Income(Budget):
-    __tablename__ = 'incomes'
+    __tablename__ = 'income'
 
     category_id: Mapped[uuid] = mapped_column(
-        ForeignKey('incomes_categories.id'),
+        ForeignKey('incomes_category.id'),
     )
-    category: Mapped['IncomesCategory'] = relationship(
-        back_populates='incomes',
+    user: Mapped['User'] = relationship(
+        primaryjoin='User.id == Income.user_id'
+    )
+    updated_user: Mapped['User'] = relationship(
+        primaryjoin='User.id == Income.updated_user_id'
     )

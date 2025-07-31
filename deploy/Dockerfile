@@ -4,6 +4,7 @@ ENV PYTHONFAULTHANDLER=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONHASHSEED=random \
     PYTHONDONTWRITEBYTECODE=1
+    PYTHONPATH=app
 
 ENV PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
@@ -18,4 +19,4 @@ RUN pip install --upgrade pip \
 COPY . .
 RUN uv pip install -r pyproject.toml --system
 
-CMD ["python", "main.py"]
+CMD ["python", "app/main.py"]

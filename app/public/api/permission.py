@@ -5,9 +5,9 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from jwt import InvalidTokenError, decode, encode
 
-from app.core.config import app_settings
-from app.domain.entities.auth import JWTUser, Token
-from app.domain.exceptions import CredentialsError
+from core.config import app_settings
+from domain.entities.auth import JWTUser, Token
+from domain.exceptions import CredentialsError
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='api/v1/auth/login')
 

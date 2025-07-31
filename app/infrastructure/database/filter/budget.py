@@ -1,17 +1,10 @@
 from sqlalchemy import BinaryExpression, and_
 
-from app.domain.entities.budget import BudgetQuery
-from app.domain.entities.category import CategoryQuery
-from app.infrastructure.database.models.budget import (
-    Expenses,
-    ExpensesCategory,
-    Income,
-    IncomesCategory,
-)
-from app.infrastructure.database.repository.filter.base import SqlAlchemyFilter
+from domain.entities.queries import BudgetQuery, CategoryQuery
+from infrastructure.database.filter.base import BaseFilter
 
 
-class BudgetFilter(SqlAlchemyFilter):
+class BudgetFilter(BaseFilter):
     def where(self, query: BudgetQuery) -> BinaryExpression | None:
         and_args = []
         if query.name__like:
@@ -27,16 +20,9 @@ class BudgetFilter(SqlAlchemyFilter):
         return None
 
 
-class CategoryFilter(SqlAlchemyFilter):
+class CategoryFilter(BaseFilter):
     def where(self, query: CategoryQuery) -> BinaryExpression | None:
         if query.name__like:
             return and_(self._model.name.ilike(f'%{query.name__like}%'))
 
         return None
-
-
-income_filter = BudgetFilter(Income)
-expenses_filter = BudgetFilter(Expenses)
-
-income_category_filter = CategoryFilter(IncomesCategory)
-expenses_category_filter = CategoryFilter(ExpensesCategory)

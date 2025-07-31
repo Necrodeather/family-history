@@ -1,5 +1,6 @@
 from typing import TypeVar
 
+from pydantic import ValidationInfo, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 TSettings = TypeVar('TSettings', bound=BaseSettings)
@@ -23,10 +24,20 @@ class DatabaseSettings(BaseSettings):
     port: int = 5432
     db: str
     echo: bool = False
+    uri: str = ''
 
-    @property
-    def uri(self) -> str:
-        return f'{self.driver}://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}'
+    @field_validator('uri')
+    @classmethod
+    def get_uri(cls, value: str, values: ValidationInfo) -> str:
+        if value:
+            return value
+        driver = values.data['driver']
+        user = values.data['user']
+        password = values.data['password']
+        host = values.data['host']
+        port = values.data['port']
+        db = values.data['db']
+        return f'{driver}://{user}:{password}@{host}:{port}/{db}'
 
 
 class AppSettings(BaseSettings):
@@ -55,6 +66,17 @@ class RedisSettings(BaseSettings):
     host: str = 'localhost'
     port: int = 6379
     db: int = 0
+    uri: str = ''
+
+    @field_validator('uri')
+    @classmethod
+    def get_uri(cls, value: str, values: ValidationInfo) -> str:
+        if value:
+            return value
+        host = values.data['host']
+        port = values.data['port']
+        db = values.data['db']
+        return f'redis://{host}:{port}/{db}'
 
 
 database_settings: DatabaseSettings = get_settings(DatabaseSettings)

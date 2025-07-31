@@ -1,111 +1,73 @@
-from contextlib import asynccontextmanager
-from typing import AsyncIterator
+from typing import Any, Sequence
 
-from fastapi import FastAPI, Request
+from dependency_injector.containers import DeclarativeContainer
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from fastapi_cache import FastAPICache
-from fastapi_cache.backends.redis import RedisBackend
-from redis.asyncio import Redis
+from fastapi.openapi.utils import get_openapi
 
-from app.core.config import redis_settings
-from app.domain.exceptions import (
-    CredentialsError,
-    EntityAlreadyError,
-    IncorrectLoginError,
-    NotFoundError,
-    UserAlreadyRegisteredError,
-)
-from app.public.api.v1 import api_router
-from app.utils import read_pyproject_toml
+from containers.root import AppContainer
 
-project_info = read_pyproject_toml()
+from .error_handlers import error_handlers
+from .utils import read_pyproject_toml
+from .v1.routers import api_router
 
 
-@asynccontextmanager
-async def lifespan(_: FastAPI) -> AsyncIterator[None]:
-    redis = Redis(**redis_settings.model_dump(exclude_none=True))
-    FastAPICache.init(RedisBackend(redis), prefix='backend-cache')
-    yield
+class Server:
+    app: FastAPI = FastAPI
+
+    def __init__(self, app: FastAPI, container: DeclarativeContainer) -> None:
+        self.app = app
+        self.app.container = container
+
+        self._register_middleware(app)
+        self._register_routers(app)
+        self._base_information(app)
+        self._register_exception_handlers(app, error_handlers)
+
+    def get_app(self) -> FastAPI:
+        return self.app
+
+    @staticmethod
+    def _base_information(app: FastAPI) -> None:
+        if app.openapi_schema:
+            return app.openapi_schema
+
+        project_info = read_pyproject_toml()
+        app.openapi_schema = get_openapi(
+            title=project_info['project']['name'],
+            version=project_info['project']['version'],
+            description=project_info['project']['description'],
+            license_info={'name': project_info['project']['license']},
+            routes=app.routes,
+        )
+
+    @staticmethod
+    def _register_middleware(app: FastAPI) -> None:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=['*'],
+            allow_credentials=True,
+            allow_methods=['*'],
+            allow_headers=['*'],
+        )
+
+    @staticmethod
+    def _register_routers(app: FastAPI) -> None:
+        app.include_router(api_router)
+
+    @staticmethod
+    def _register_exception_handlers(
+        app: FastAPI,
+        exception_handlers: Sequence[object],
+    ) -> None:
+        for handler in exception_handlers:
+            app.add_exception_handler(handler.__annotations__['exc'], handler)
 
 
-
-
-def create_app() -> FastAPI:
-    app = FastAPI(
-        title=project_info['project']['name'],
-        version=project_info['project']['version'],
-        description=project_info['project']['description'],
-        license_info={'name': project_info['project']['license']},
-        lifespan=lifespan,
-    )
-    app.include_router(api_router)
-
-    app.add_middleware(
-        CORSMiddleware,
-        allow_credentials=True,
-        allow_methods=['*'],
-        allow_origins=['*'],
-        allow_headers=['*'],
-    )
-
-    return app
-
-
-app = create_app()
-
-
-@app.exception_handler(CredentialsError)
-async def credentials_error_handler(
-    request: Request,
-    exc: CredentialsError,
-) -> JSONResponse:
-    return JSONResponse(
-        status_code=401,
-        content={'message': exc.message},
-        headers={'WWW-Authenticate': 'Bearer'},
-    )
-
-
-@app.exception_handler(IncorrectLoginError)
-async def incorrect_login_error_handler(
-    request: Request,
-    exc: IncorrectLoginError,
-) -> JSONResponse:
-    return JSONResponse(
-        status_code=401,
-        content={'message': exc.message},
-    )
-
-
-@app.exception_handler(NotFoundError)
-async def not_found_handler(
-    request: Request,
-    exc: NotFoundError,
-) -> JSONResponse:
-    return JSONResponse(
-        status_code=404,
-        content={'message': exc.message},
-    )
-
-
-@app.exception_handler(UserAlreadyRegisteredError)
-async def user_already_registered_handler(
-    request: Request,
-    exc: UserAlreadyRegisteredError,
-) -> JSONResponse:
-    return JSONResponse(
-        status_code=409,
-        content={'message': exc.message},
-    )
-
-
-@app.exception_handler(EntityAlreadyError)
-async def entity_already_handler(
-    request: Request,
-    exc: EntityAlreadyError,
-) -> JSONResponse:
-    return JSONResponse(
-        status_code=409,
-        content={'message': exc.message},
-    )
+def create_app(
+    container: AppContainer,
+    *args: Any,
+    **kwargs: Any,
+) -> FastAPI:
+    app = FastAPI(*args, **kwargs)
+    return Server(app=app, container=container).get_app()

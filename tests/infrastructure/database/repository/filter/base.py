@@ -2,7 +2,7 @@ from typing import Type
 
 import pytest
 
-from app.domain.repository.filter import QueryFilter
+from app.domain.repositories.filter import QueryFilter
 from app.domain.types import QuerySchemaType
 
 pytestmark = pytest.mark.asyncio

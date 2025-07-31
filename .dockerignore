@@ -7,6 +7,6 @@ __pycache__
 .python-version
 README.md
 .vscode
-database
 .venv
 .gitignore
+tests

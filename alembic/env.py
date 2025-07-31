@@ -9,7 +9,7 @@ from app.core.config import database_settings
 from app.infrastructure.database.base import Base
 from app.infrastructure.database.models import (  # noqa: F401
     budget,
-    mixins,
+    category,
     user,
 )
 
