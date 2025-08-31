@@ -9,6 +9,9 @@ from containers.user import AuthContainer, UserContainer
 
 
 class AppContainer(containers.DeclarativeContainer):
+    """
+    Root container for all application dependencies.
+    """
     wiring_config = containers.WiringConfiguration(packages=['public.api.v1'])
 
     database_config = providers.Configuration()

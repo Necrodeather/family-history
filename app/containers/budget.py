@@ -17,6 +17,8 @@ from services.budget import BudgetService
 
 
 class ExpensesContainer(containers.DeclarativeContainer):
+    """Container for expenses-related dependencies."""
+
     database_config = providers.Configuration()
 
     db: providers.Provider[SqlAlchemyEngine] = providers.Resource(
@@ -45,6 +47,8 @@ class ExpensesContainer(containers.DeclarativeContainer):
 
 
 class IncomeContainer(containers.DeclarativeContainer):
+    """Container for income-related dependencies."""
+
     database_config = providers.Configuration()
 
     db: providers.Provider[SqlAlchemyEngine] = providers.Resource(

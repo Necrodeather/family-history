@@ -14,4 +14,5 @@ class BudgetService(
         BudgetRead,
     ]
 ):
+    """Service for budgets."""
     pass

@@ -18,10 +18,21 @@ class ExpensesCategoryRepository(
         CategoryCreate,
     ]
 ):
+    """Repository for expenses categories."""
+
     async def create(
         self,
         object: CategoryCreate,
     ) -> ExpensesCategory:
+        """Creates a new expenses category.
+
+        :param object: The data to create the category with.
+        :type object: CategoryCreate
+        :raises EntityAlreadyError: If a category with the same name
+        already exists.
+        :returns: The created category.
+        :rtype: ExpensesCategory
+        """
         try:
             return await super().create(object)
         except IntegrityError:
@@ -35,10 +46,21 @@ class IncomesCategoryRepository(
         CategoryCreate,
     ]
 ):
+    """Repository for incomes categories."""
+
     async def create(
         self,
         object: CategoryCreate,
     ) -> IncomesCategory:
+        """Creates a new incomes category.
+
+        :param object: The data to create the category with.
+        :type object: CategoryCreate
+        :raises EntityAlreadyError: If a category with the same name
+        already exists.
+        :returns: The created category.
+        :rtype: IncomesCategory
+        """
         try:
             return await super().create(object)
         except IntegrityError:

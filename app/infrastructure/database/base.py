@@ -38,6 +38,7 @@ meta = MetaData(
 
 
 class Base(DeclarativeBase):
+    """Base class for all database models."""
     metadata = meta
 
     registry = registry(

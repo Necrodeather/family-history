@@ -14,4 +14,5 @@ class CategoryService(
         CategoryRead,
     ]
 ):
+    """Service for categories."""
     pass
