@@ -11,6 +11,29 @@ def get_settings(cls: type[TSettings]) -> TSettings:
 
 
 class DatabaseSettings(BaseSettings):
+    """Pydantic model for database settings.
+
+    This model contains the configuration for connecting to a PostgreSQL
+    database using SQLAlchemy.
+
+    :param driver: The driver to use when connecting to the database.
+    :type driver: str
+    :param user: The username to use when connecting to the database.
+    :type user: str
+    :param password: The password to use when connecting to the database.
+    :type password: str
+    :param host: The hostname of the database server.
+    :type host: str, optional
+    :param port: The port number of the database server.
+    :type port: int, optional
+    :param db: The name of the database to connect to.
+    :type db: str
+    :param echo: Whether to enable logging of SQL statements.
+    :type echo: bool, optional
+    :param uri: The connection URI for connecting to the database.
+    :type uri: str, optional
+    """
+
     model_config = SettingsConfigDict(
         env_file='./.env',
         env_prefix='postgres_',
@@ -29,6 +52,17 @@ class DatabaseSettings(BaseSettings):
     @field_validator('uri')
     @classmethod
     def get_uri(cls, value: str, values: ValidationInfo) -> str:
+        """Generates a connection URI for connecting to the database.
+
+        :param value: The current value of the `uri` field. If provided, it
+        will be returned as-is.
+        :type value: str
+        :param values: A dictionary containing the values of all
+        fields in the model.
+        :type values: ValidationInfo
+        :returns: The connection URI for connecting to the database.
+        :rtype: str
+        """
         if value:
             return value
         driver = values.data['driver']
@@ -41,6 +75,33 @@ class DatabaseSettings(BaseSettings):
 
 
 class AppSettings(BaseSettings):
+    """Pydantic model for application settings.
+
+    This model contains the configuration for running a web application using
+    FastAPI and Uvicorn.
+
+    :param host: The hostname to bind the server to.
+    :type host: str, optional
+    :param port: The port number to listen on. Defaults to 8000.
+    :type port: int, optional
+    :param secret_key: A secret key used for generating JWT tokens.
+    :type secret_key: str
+    :param debug_reload: Whether to enable Uvicorn's debug and
+    auto-reload features.
+    :type debug_reload: bool, optional
+    :param workers: The number of worker processes to use with
+    Uvicorn.
+    :type workers: int, optional
+    :param refresh_token_expire_minutes: The number of minutes
+    until a refresh token expires.
+    :type refresh_token_expire_minutes: int, optional
+    :param access_token_expire_minutes: The number of minutes
+    until an access token expires.
+    :type access_token_expire_minutes: int, optional
+    :param algorithm: The JWT encoding algorithm to use.
+    :type algorithm: str, optional
+    """
+
     model_config = SettingsConfigDict(
         env_file='./.env',
         env_prefix='app_',
@@ -57,6 +118,20 @@ class AppSettings(BaseSettings):
 
 
 class RedisSettings(BaseSettings):
+    """Pydantic model for Redis settings.
+
+    This model contains the configuration for connecting to a Redis instance.
+
+    :param host: The hostname of the Redis server.
+    :type host: str, optional
+    :param port: The port number of the Redis server.
+    :type port: int, optional
+    :param db: The database index to use when connecting to Redis.
+    :type db: int, optional
+    :param uri: The connection URI for connecting to Redis.
+    :type uri: str, optional
+    """
+
     model_config = SettingsConfigDict(
         env_file='./.env',
         env_prefix='redis_',
@@ -71,6 +146,17 @@ class RedisSettings(BaseSettings):
     @field_validator('uri')
     @classmethod
     def get_uri(cls, value: str, values: ValidationInfo) -> str:
+        """Generates a connection URI for connecting to Redis.
+
+        :param value: The current value of the `uri` field. If provided,
+        it will be returned as-is.
+        :type value: str
+        :param values: A dictionary containing the values of
+        all fields in the model.
+        :type values: ValidationInfo
+        :returns: The connection URI for connecting to Redis.
+        :rtype: str
+        """
         if value:
             return value
         host = values.data['host']

@@ -12,6 +12,8 @@ from services.user import AuthService, UserService
 
 
 class UserContainer(containers.DeclarativeContainer):
+    """Container for user-related dependencies."""
+
     database_config = providers.Configuration()
 
     db: providers.Provider[SqlAlchemyEngine] = providers.Resource(
@@ -40,6 +42,8 @@ class UserContainer(containers.DeclarativeContainer):
 
 
 class AuthContainer(containers.DeclarativeContainer):
+    """Container for authentication-related dependencies."""
+
     database_config = providers.Configuration()
 
     db: providers.Provider[SqlAlchemyEngine] = providers.Resource(

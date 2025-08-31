@@ -13,6 +13,15 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='api/v1/auth/login')
 
 
 def create_token(data: JWTUser, is_refreshed: bool = False) -> Token:
+    """Creates a new token.
+
+    :param data: The data to encode in the token.
+    :type data: JWTUser
+    :param is_refreshed: Whether the token is a refresh token.
+    :type is_refreshed: bool
+    :returns: The created token.
+    :rtype: Token
+    """
     to_encode = data.model_dump().copy()
     if is_refreshed:
         expire = datetime.now(timezone.utc) + timedelta(
@@ -32,7 +41,15 @@ def create_token(data: JWTUser, is_refreshed: bool = False) -> Token:
 
 async def decode_token(
     token: Annotated[str, Depends(oauth2_scheme)],
-) -> None:
+) -> JWTUser:
+    """Decodes a token.
+
+    :param token: The token to decode.
+    :type token: Annotated[str, Depends(oauth2_scheme)]
+    :raises CredentialsError: If the token is invalid.
+    :returns: The decoded token.
+    :rtype: JWTUser
+    """
     try:
         payload = decode(
             token,

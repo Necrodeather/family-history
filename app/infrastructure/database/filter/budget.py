@@ -5,7 +5,16 @@ from infrastructure.database.filter.base import BaseFilter
 
 
 class BudgetFilter(BaseFilter):
+    """Filter for budgets."""
+
     def where(self, query: BudgetQuery) -> BinaryExpression | None:
+        """Creates a where clause for a budget query.
+
+        :param query: The budget query.
+        :type query: BudgetQuery
+        :returns: A where clause for a budget query.
+        :rtype: BinaryExpression | None
+        """
         and_args = []
         if query.name__like:
             and_args.append(self._model.name.ilike(f'%{query.name__like}%'))
@@ -21,7 +30,16 @@ class BudgetFilter(BaseFilter):
 
 
 class CategoryFilter(BaseFilter):
+    """Filter for categories."""
+
     def where(self, query: CategoryQuery) -> BinaryExpression | None:
+        """Creates a where clause for a category query.
+
+        :param query: The category query.
+        :type query: CategoryQuery
+        :returns: A where clause for a category query.
+        :rtype: BinaryExpression | None
+        """
         if query.name__like:
             return and_(self._model.name.ilike(f'%{query.name__like}%'))
 

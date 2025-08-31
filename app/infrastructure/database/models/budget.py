@@ -9,6 +9,7 @@ from .mixins import BaseMixin, CreatedAtMixin, UpdatedAtMixin
 
 
 class Budget(BaseMixin, CreatedAtMixin, UpdatedAtMixin):
+    """Base class for all budget models."""
     __abstract__ = True
 
     name: Mapped[str_128]
@@ -19,6 +20,7 @@ class Budget(BaseMixin, CreatedAtMixin, UpdatedAtMixin):
 
 
 class Expenses(Budget):
+    """Model for expenses."""
     __tablename__ = 'expenses'
 
     category_id: Mapped[uuid] = mapped_column(
@@ -33,6 +35,7 @@ class Expenses(Budget):
 
 
 class Income(Budget):
+    """Model for income."""
     __tablename__ = 'income'
 
     category_id: Mapped[uuid] = mapped_column(

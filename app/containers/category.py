@@ -15,6 +15,8 @@ from services.category import CategoryService
 
 
 class ExpensesCategoryContainer(containers.DeclarativeContainer):
+    """Container for expenses category-related dependencies."""
+
     database_config = providers.Configuration()
 
     db: providers.Provider[SqlAlchemyEngine] = providers.Resource(
@@ -45,6 +47,8 @@ class ExpensesCategoryContainer(containers.DeclarativeContainer):
 
 
 class IncomesCategoryContainer(containers.DeclarativeContainer):
+    """Container for incomes category-related dependencies."""
+
     database_config = providers.Configuration()
 
     db: providers.Provider[SqlAlchemyEngine] = providers.Resource(

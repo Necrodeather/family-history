@@ -6,8 +6,10 @@ from infrastructure.database.repository.base import (
 
 
 class ExpensesRepository(BaseRepository[Expenses, BudgetCreate, BudgetUpdate]):
+    """Repository for expenses."""
     pass
 
 
 class IncomeRepository(BaseRepository[Income, BudgetCreate, BudgetUpdate]):
+    """Repository for income."""
     pass

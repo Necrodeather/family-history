@@ -24,13 +24,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "coverage>=7.9.2",
-    "factory-boy>=3.3.3",
-    "httpx>=0.28.1",
     "mypy>=1.13.0",
-    "pytest>=8.4.1",
-    "pytest-asyncio>=1.1.0",
-    "pytest-mock>=3.14.1",
     "ruff>=0.7.3",
 ]
 
@@ -75,14 +69,27 @@ exclude = [
     "build",
     "dist",
     "node_modules",
+    "alembic",
 ]
 line-length = 79
 fix = true
 target-version = "py312"
 
 [tool.ruff.lint]
-select = ["COM", "T100", "E", 'F', "W", "ERA", "N", "I"]
-ignore = ["F821", "COM812"]
+select = [
+    "COM", 
+    "T100", 
+    "E", 
+    'F', 
+    "W", 
+    "ERA", 
+    "N", 
+    "I"
+]
+ignore = [
+    "F821", 
+    "COM812"
+]
 fixable = ["ALL"]
 
 [tool.ruff.format]
@@ -100,26 +107,3 @@ known-first-party = [
     "infrastructure",
     "containers",
 ]
-
-[tool.pytest.ini_options]
-pythonpath = "app"
-filterwarnings = [
-    'ignore::DeprecationWarning', # 'crypt' is deprecated and slated for removal in Python 3.13
-    'ignore::UserWarning',        # Pydantic serializer warnings
-]
-asyncio_mode = "auto"
-
-
-[tool.coverage.report]
-omit = [
-    "tests/*",
-    "app/domain/*",
-    "app/public/api/app.py",
-    "app/infrastructure/database/uow.py",
-    "*base.py",
-]
-show_missing = true
-skip_covered = true
-skip_empty = true
-precision = 2
-fail_under = 100

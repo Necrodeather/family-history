@@ -6,6 +6,7 @@ from .mixins import BaseMixin, CreatedAtMixin
 
 
 class User(BaseMixin, CreatedAtMixin):
+    """Model for users."""
     __tablename__ = 'user'
 
     first_name: Mapped[str_64]

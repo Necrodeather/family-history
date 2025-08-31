@@ -18,6 +18,7 @@ auth_router = APIRouter(prefix='/auth')
 
 @auth_router.post(
     '/login',
+    response_description="Returns a JWT token for the authenticated user",
     responses={
         401: {'model': ErrorMessage},
     },
@@ -30,6 +31,9 @@ async def login(
         Depends(Provide[AppContainer.auth.service]),
     ],
 ) -> JWTToken:
+    """
+    Login a user.
+    """
     user = await auth_service.login(login_user_form)
     jwt_user = JWTUser.model_validate(user)
     return JWTToken(
@@ -53,6 +57,9 @@ async def register(
         Depends(Provide[AppContainer.auth.service]),
     ],
 ) -> UserRead:
+    """
+    Create a new user.
+    """
     return await auth_service.create(create_user_form)
 
 
@@ -60,6 +67,9 @@ async def register(
 async def refresh_access_token(
     jwt_user: Annotated[JWTUser, Depends(decode_token)],
 ) -> JWTToken:
+    """
+    Refresh the access token for a user.
+    """
     return JWTToken(
         access_token=create_token(jwt_user),
         refresh_token=create_token(jwt_user, is_refreshed=True),
@@ -75,4 +85,7 @@ async def me(
     ],
     user: Annotated[JWTUser, Depends(decode_token)],
 ) -> UserRead:
+    """
+    Get the current user's information.
+    """
     return await auth_service.get_by_id(user.id)
